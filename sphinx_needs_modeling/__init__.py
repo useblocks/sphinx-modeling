@@ -1,0 +1,1 @@
+from sphinx_needs_modeling import setup
