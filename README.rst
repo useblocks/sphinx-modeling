@@ -3,10 +3,10 @@
 Introduction
 ============
 
-``Sphinx-Needs-Modeling`` allows defining models and constraints for need objects defined with
-`Sphinx-Needs <https://github.com/useblocks/sphinx-needs>`_.
+``Sphinx-Needs-Modeling`` allows the definition of models and constraints for objects defined with
+`Sphinx-Needs <https://github.com/useblocks/sphinx-needs>`_. They can be validated during the Sphinx build.
 
-`pydantic <https://github.com/pydantic/pydantic>`_ is used under the hood to validate all defined models.
+Under the hood `pydantic <https://github.com/pydantic/pydantic>`_ is used to provide and validate all models.
 
 Arbitrary constraints can be enforced such as:
 
@@ -28,8 +28,10 @@ Motivation
 ==========
 
 Requirements management with ``Sphinx-Needs`` and docs-as-code traditionally comes at the cost of complete freedom for developers. ``need_types``, ``needs_extra_options`` and ``needs_extra_links`` are global and all ``need_types`` can
-use all ``needs_extra_options``. This is a problem for company that want to enforce standards on the defined objects.
-Especially when migrating parts of the requirements management to ``Sphinx-Needs`` it is crucial to enforce the same
+use all ``needs_extra_options``.
+
+This is a problem for organisations that want to enforce standards on the defined objects.
+Especially when migrating parts of the requirements management system to ``Sphinx-Needs`` it is crucial to enforce the same
 constraints as defined by existing solutions. Doing so enables a technological interoperability between solutions.
 
 
