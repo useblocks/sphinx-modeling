@@ -1,0 +1,124 @@
+[tool.poetry]
+name = "sphinx-needs-modeling"
+
+# !! Don't miss updates in needs.py, conf.py, changelog.rst, and .github/workflows/docker !!!
+version = "0.1"
+
+description = "Sphinx extension to enable modeling and set constraints for sphinx-needs"
+authors = ["team useblocks <info@useblocks.com>"]
+license = "MIT"
+readme = "README.rst"
+repository = "http://github.com/useblocks/sphinx-needs-modeling"
+documentation = "https://sphinx-needs-modeling.readthedocs.io/en/latest/"
+classifiers=[
+        'Development Status :: 4 - Beta',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: MIT License',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Topic :: Documentation',
+        'Topic :: Utilities',
+        'Framework :: Sphinx :: Extension',
+    ]
+
+packages = [
+    {include = "sphinx_needs_modeling"}
+]
+
+
+[tool.poetry.dependencies]
+python = ">=3.7.0,<4.0"
+sphinx = ">=5.0"
+docutils = ">=0.18.1"
+sphinx_needs = ">=1.0.1"
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^2"
+# test dependencies
+pytest = "^7"
+pytest-xdist="*"  # parallelisation
+
+# type checking
+mypy = "^0.960"
+types-setuptools = "^57.4.14"
+docutils-stubs = "^0.0.22"
+
+# docs
+sphinx-immaterial = "==0.7.3"
+sphinxcontrib-programoutput = "^0.17"
+sphinxcontrib-plantuml = "^0.24"
+
+# formatting dependencies
+black = "^22.3"
+isort = "^5.7.0"
+
+# pyparsing 3.0.5 does not work with current "packaging" lib
+pyparsing = "==3.0.8"  # 3.0.5 error: https://github.com/pyparsing/pyparsing/issues/329
+sphinx_design = "^0.3.0"
+
+
+[tool.pytest.ini_options]
+asyncio_mode= "auto"
+
+[tool.black]
+line-length = 120
+
+[tool.isort]
+profile = "black"
+
+[tool.mypy]
+strict = true
+show_error_codes = true
+implicit_reexport = true
+files = "sphinx_needs"
+ignore_missing_imports = true
+namespace_packages = true
+
+[[tool.mypy.overrides]]
+module = [
+  'sphinx_needs.api.need',
+  'sphinx_needs.builder',
+  'sphinx_needs.diagrams_common',
+  'sphinx_needs.directives.need',
+  'sphinx_needs.directives.needbar',
+  'sphinx_needs.directives.needextend',
+  'sphinx_needs.directives.needextract',
+  'sphinx_needs.directives.needfilter',
+  'sphinx_needs.directives.needflow',
+  'sphinx_needs.directives.needgantt',
+  'sphinx_needs.directives.needlist',
+  'sphinx_needs.directives.needpie',
+  'sphinx_needs.directives.needsequence',
+  'sphinx_needs.directives.needtable',
+  'sphinx_needs.directives.needuml',
+  'sphinx_needs.directives.utils',
+  'sphinx_needs.environment',
+  'sphinx_needs.external_needs',
+  'sphinx_needs.filter_common',
+  'sphinx_needs.functions.common',
+  'sphinx_needs.functions.functions',
+  'sphinx_needs.layout',
+  'sphinx_needs.needs',
+  'sphinx_needs.needsfile',
+  'sphinx_needs.roles.need_incoming',
+  'sphinx_needs.roles.need_part',
+  'sphinx_needs.roles.need_ref',
+  'sphinx_needs.services.github',
+  'sphinx_needs.services.manager',
+  'sphinx_needs.utils',
+  'sphinx_needs.warnings',
+]
+ignore_errors = true
+
+[tool.poetry.extras]
+docs = ["sphinx>=4.0"]
+immaterial = ["sphinx-immaterial"]
+
+[build-system]
+requires = ["setuptools", "poetry_core>=1.0.8"]  # setuptools for deps like plantuml
+build-backend = "poetry.core.masonry.api"
+
