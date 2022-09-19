@@ -21,8 +21,8 @@ import sys
 from typing import List, Literal, Optional, Union
 
 from pydantic import BaseModel, Extra, Field, ValidationError, constr, validator
-from sphinx_needs_modeling.modeling import BaseModelNeeds, validator_links
-from sphinx_needs_modeling.modeling.defaults import NEEDS_PYDANTIC_REMOVE_FIELDS
+from sphinx_needs_modeling.modeling.defaults import NEEDS_MODELING_REMOVE_FIELDS
+from sphinx_needs_modeling.modeling.main import BaseModelNeeds, validator_links
 
 
 sys.path.insert(0, os.path.abspath("."))
@@ -114,13 +114,13 @@ class Test(BaseModelNeeds, extra=Extra.forbid):
     parent_need: id_constraints["Impl"]
 
 
-needs_pydantic_models = [
+needs_modeling_pydantic_models = [
     Impl,
     Spec,
     Story,
     Test,
 ]
-needs_pydantic_remove_fields = NEEDS_PYDANTIC_REMOVE_FIELDS + [
+needs_modeling_remove_fields = NEEDS_MODELING_REMOVE_FIELDS + [
     "content",
     "full_title",
     "is_external",
