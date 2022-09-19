@@ -32,11 +32,6 @@ docs-html-fast:
 docs-pdf:
 	poetry run make --directory docs/ clean && make --directory docs/ latexpdf
 
-
-.PHONY: docs-linkcheck
-docs-linkcheck:
-	poetry run make --directory docs/ linkcheck
-
 .PHONY: format
 format:
 	poetry run black ${SRC_FILES}

@@ -35,14 +35,3 @@ def tests(session, sphinx):
         run_tests(session, sphinx)
     else:
         session.skip("unsupported combination")
-
-
-@session(python="3.9")
-def linkcheck(session):
-    session.install(".")
-    # LinkCheck can handle rate limits since Sphinx 3.4, which is needed as
-    # our doc has to many links to GitHub.
-    session.run("pip", "install", "sphinx==3.5.4", silent=True)
-
-    session.run("pip", "install", "-r", "docs/requirements.txt", silent=True)
-    session.run("make", "docs-linkcheck", external=True)
