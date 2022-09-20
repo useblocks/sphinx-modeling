@@ -1,3 +1,5 @@
+import os
+import pickle
 import re
 from typing import Any, Dict, List, Literal, Optional, Union
 
@@ -28,7 +30,7 @@ class BaseModelNeeds(BaseModel):
 def validator_links(
     value: Union[str, List[str]],
     values: Dict[str, Any],
-):
+) -> None:
     """
     Check whether a link target
     - is of the right type (str, List[str])
@@ -54,7 +56,7 @@ def validator_links(
             raise ValueError(f"Cannot find '{link}' in needs dictionary")
 
 
-def check_model(env: BuildEnvironment) -> None:
+def check_model(env: BuildEnvironment, msg_path: str) -> None:
     """
     Check all needs against a user defined pydantic model.
 
@@ -64,6 +66,12 @@ def check_model(env: BuildEnvironment) -> None:
     # Only perform calculation if not already done yet
     if env.needs_modeling_workflow["models_checked"]:
         return
+
+    # remove outdated messages file
+    try:
+        os.remove(msg_path)
+    except OSError:
+        pass
 
     needs = env.needs_all_needs
     # all_needs.set(needs)
@@ -81,6 +89,7 @@ def check_model(env: BuildEnvironment) -> None:
 
     logged_types_without_model = set()  # helper to avoid duplicate log output
     all_successful = True
+    all_messages = []  # return variable
     for need in needs.values():
         try:
             # expected model name is the need type with first letter capitalized (this is how Python class are named)
@@ -103,8 +112,9 @@ def check_model(env: BuildEnvironment) -> None:
                     logged_types_without_model.add(need["type"])
         except ValidationError as exc:
             all_successful = False
-            log.info(f"Model validation: failed for need {need['id']}")
-            log.info(exc)
+            messages = []
+            messages.append(f"Model validation: failed for need {need['id']}")
+            messages.append(str(exc))
             # get field values as pydantic does not publish that in ValidationError
             # in all cases, like for regex checks
             # see https://github.com/pydantic/pydantic/issues/784
@@ -113,13 +123,23 @@ def check_model(env: BuildEnvironment) -> None:
                 for field in error["loc"]:
                     if "regex" in error["type"]:
                         if field not in error_fields:
-                            log.warn(f"Value of {field}: {need[field]}")
+                            messages.append(f"Actual value: {need[field]}")
                             error_fields.add(field)
+            all_messages.extend(messages)
+            for msg in messages:
+                log.warn(msg)
     if all_successful:
         log.info("Validation was successful!")
 
     # Finally set a flag so that this function gets not executed several times
-    env.needs_modeling_workflow["model_checked"] = True
+    env.needs_modeling_workflow["models_checked"] = True
+
+    if all_messages:
+        dir_name = os.path.dirname(os.path.abspath(msg_path))
+        if not os.path.exists(dir_name):
+            os.makedirs(dir_name)
+        with open(msg_path, "wb") as fp:
+            pickle.dump(all_messages, fp)
 
 
 def _value_allowed(v: Any) -> bool:
