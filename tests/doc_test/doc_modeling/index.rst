@@ -6,11 +6,6 @@ TEST DOCUMENT MODELING
 
    Some content
 
-.. story:: Test story2
-   :id: US_002
-
-   Some content 2
-
 .. spec:: Test spec1
    :id: SP_001
    :links: US_001
@@ -24,3 +19,7 @@ TEST DOCUMENT MODELING
    :id: IM_001
 
 
+.. toctree::
+   :hidden:
+
+   add
