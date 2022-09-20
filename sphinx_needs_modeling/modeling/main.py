@@ -1,3 +1,10 @@
+"""
+Main logic for modeling.
+
+It contains some mypy '# type: ignore' which are used for Sphinx environment fields.
+They are unknown to mypy as they are dynamically created.
+"""
+
 import os
 import pickle
 import re
@@ -64,7 +71,7 @@ def check_model(env: BuildEnvironment, msg_path: str) -> None:
     """
     log = get_logger(__name__)
     # Only perform calculation if not already done yet
-    if env.needs_modeling_workflow["models_checked"]:
+    if env.needs_modeling_workflow["models_checked"]:  # type: ignore
         return
 
     # remove outdated messages file
@@ -73,7 +80,7 @@ def check_model(env: BuildEnvironment, msg_path: str) -> None:
     except OSError:
         pass
 
-    needs = env.needs_all_needs
+    needs = env.needs_all_needs  # type: ignore
     # all_needs.set(needs)
     pydantic_models = env.config.needs_modeling_pydantic_models
 
@@ -132,7 +139,7 @@ def check_model(env: BuildEnvironment, msg_path: str) -> None:
         log.info("Validation was successful!")
 
     # Finally set a flag so that this function gets not executed several times
-    env.needs_modeling_workflow["models_checked"] = True
+    env.needs_modeling_workflow["models_checked"] = True  # type: ignore
 
     if all_messages:
         dir_name = os.path.dirname(os.path.abspath(msg_path))

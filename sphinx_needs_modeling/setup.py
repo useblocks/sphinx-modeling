@@ -65,7 +65,7 @@ def prepare_env(app: Sphinx, env: BuildEnvironment, _docname: str) -> None:
         # to get early feedback. doctree-resolved is used for that which can be
         # fired multiple times. Therefore the models_checked workflow step is stored
         # on the env.
-        env.needs_modeling_workflow = {
+        env.needs_modeling_workflow = {  # type: ignore
             "models_checked": False,
         }
 
