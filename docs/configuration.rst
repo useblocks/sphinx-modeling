@@ -17,13 +17,18 @@ Add **sphinx_modeling** to your extensions.
 Options
 -------
 
-All configuration options starts with the prefix ``modeling_`` for **Sphinx-Modeling**.
+All configuration options starts with the prefix ``modeling_`` for Sphinx-Modeling.
 
 
 modeling_models
 ~~~~~~~~~~~~~~~
+
 This option defines the list of user provided pydantic models.
-Each pydantic model class must inherit from ``BaseModelNeeds``.
+Each pydantic model class must inherit from ``BaseModelNeeds`` which can be imported as follows
+
+.. code-block:: python
+
+   from sphinx_modeling.modeling.main import BaseModelNeeds
 
 Default: ``[]``
 
@@ -40,6 +45,11 @@ Default: ``[]``
       links: pydantic.conlist(Story, min_items=1, max_items=1)
 
    modeling_models = [Story, Spec]
+
+See `here <https://github.com/useblocks/sphinx-modeling/blob/main/tests/doc_test/doc_modeling/conf.py>`_
+for a full example.
+
+.. _modeling_remove_fields:
 
 modeling_remove_fields
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -69,6 +79,8 @@ Example:
 
 .. code-block:: python
 
+   from sphinx_modeling.modeling.defaults import MODELING_REMOVE_FIELDS
+
    modeling_remove_fields = MODELING_REMOVE_FIELDS + [
     "content",
     "full_title",
@@ -76,3 +88,12 @@ Example:
     "is_need",
     "is_part",
    ]
+
+modeling_remove_backlinks
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Flag indicating whether to remove back referencing link fields from need dictionaries before passing on to pydantic.
+This is an addition to :ref:`modeling_remove_fields` so the backlinks don't have to be listed separately.
+Commonly they should also not be part of the validation models.
+
+Default: ``True``

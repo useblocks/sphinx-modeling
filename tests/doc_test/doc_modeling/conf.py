@@ -24,17 +24,9 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
-from pydantic import (
-    BaseModel,
-    Extra,
-    Field,
-    ValidationError,
-    conlist,
-    constr,
-    validator,
-)
+from pydantic import Extra, conlist, constr, validator
 
-from sphinx_modeling.modeling.defaults import NEEDS_MODELING_REMOVE_FIELDS
+from sphinx_modeling.modeling.defaults import MODELING_REMOVE_FIELDS
 from sphinx_modeling.modeling.main import BaseModelNeeds
 
 sys.path.insert(0, os.path.abspath("."))
@@ -111,9 +103,8 @@ class Story(BaseModelNeeds, extra=Extra.forbid):
     type: Literal["story"]
     active: Optional[needs_bool]
 
-    # TODO: allow_reuse is needed due to a bug in _prepare_validator where
-    #       __module__ is undefined here
-    #       (which is perfectly fine as conf.py is not *used* as a module)
+    # TODO allow_reuse is needed due to a bug in _prepare_validator where __module__ is undefined here
+    # (which is perfectly fine as conf.py is not *used* as a module)
     @validator("id", allow_reuse=True)
     def check_id(cls, value):
         return value
@@ -140,13 +131,13 @@ class Test(BaseModelNeeds, extra=Extra.forbid):
     parent_need: Impl
 
 
-needs_modeling_pydantic_models = [
+modeling_models = [
     Story,
     Spec,
     Impl,
     Test,
 ]
-needs_modeling_remove_fields = NEEDS_MODELING_REMOVE_FIELDS + [
+modeling_remove_fields = MODELING_REMOVE_FIELDS + [
     "content",
     "full_title",
     "is_external",
