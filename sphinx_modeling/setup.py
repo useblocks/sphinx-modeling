@@ -11,8 +11,8 @@ from sphinx_needs.api import add_dynamic_function, add_extra_option, add_need_ty
 
 from sphinx_modeling.logging import get_logger
 from sphinx_modeling.modeling.defaults import (
-    NEEDS_MODELING_REMOVE_BACKLINKS,
-    NEEDS_MODELING_REMOVE_FIELDS,
+    MODELING_REMOVE_BACKLINKS,
+    MODELING_REMOVE_FIELDS,
 )
 from sphinx_modeling.modeling.main import check_model
 
@@ -31,16 +31,16 @@ def setup(app: Sphinx) -> Dict[str, Any]:
     log.info("Setting up sphinx-modeling extension")
 
     # configurations
-    app.add_config_value("needs_modeling_pydantic_models", [], "html", types=[str])
+    app.add_config_value("modeling_models", [], "html", types=[str])
     app.add_config_value(
-        "needs_modeling_remove_fields",
-        NEEDS_MODELING_REMOVE_FIELDS,
+        "modeling_remove_fields",
+        MODELING_REMOVE_FIELDS,
         "html",
         types=[list],
     )
     app.add_config_value(
-        "needs_modeling_remove_backlinks",
-        NEEDS_MODELING_REMOVE_BACKLINKS,
+        "modeling_remove_backlinks",
+        MODELING_REMOVE_BACKLINKS,
         "html",
         types=[bool],
     )

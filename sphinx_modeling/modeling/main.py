@@ -71,7 +71,7 @@ class BaseModelNeeds(BaseModel):
             # remember the id to detect circular references (recursion depth limitation)
             PENDING_NEED_IDS.append(need_id)
 
-        pydantic_models = values["env"].config.needs_modeling_pydantic_models
+        pydantic_models = values["env"].config.modeling_models
         model_name_2_model = {model.__name__: model for model in pydantic_models}
         sphinx_needs_list_link_types = [link["option"] for link in values["env"].config.needs_extra_links]
         sphinx_needs_list_link_types.append("parent_needs")
@@ -110,8 +110,8 @@ class BaseModelNeeds(BaseModel):
                     need_relevant_fields = _remove_unrequested_fields(
                         resolved_need,
                         resolved_need_model_fields,
-                        values["env"].config.needs_modeling_remove_fields,
-                        values["env"].config.needs_modeling_remove_backlinks,
+                        values["env"].config.modeling_remove_fields,
+                        values["env"].config.modeling_remove_backlinks,
                         sphinx_needs_list_link_types_back,
                     )
                     instance = need_relevant_fields
@@ -153,7 +153,7 @@ def check_model(env: BuildEnvironment, msg_path: str) -> None:
 
     needs = env.needs_all_needs  # type: ignore
     # all_needs.set(needs)
-    pydantic_models = env.config.needs_modeling_pydantic_models
+    pydantic_models = env.config.modeling_models
 
     if not pydantic_models:
         # user did not define any models, skip the check
@@ -188,8 +188,8 @@ def check_model(env: BuildEnvironment, msg_path: str) -> None:
                 need_relevant_fields = _remove_unrequested_fields(
                     need,
                     model_fields,
-                    env.config.needs_modeling_remove_fields,
-                    env.config.needs_modeling_remove_backlinks,
+                    env.config.modeling_remove_fields,
+                    env.config.modeling_remove_backlinks,
                     sphinx_needs_link_types_back,
                 )
                 instance = model(**need_relevant_fields, all_needs=needs, env=env)  # run pydantic
