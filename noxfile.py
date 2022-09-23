@@ -1,21 +1,15 @@
 import nox
 from nox_poetry import session
 
-PYTHON_VERSIONS = ["3.8", "3.9.7", "3.10"]
+
+PYTHON_VERSIONS = ["3.7", "3.8", "3.9.7", "3.10"]
 SPHINX_VERSIONS = ["5.0.2"]
+SPHINX_NEEDS_VERSIONS = ["0.7.9", "1.0.1", "1.0.2"]
 TEST_DEPENDENCIES = [
     "pytest",
     "pytest-xdist",
     "pytest_lsp",
-    "responses",
-    "lxml",
-    "pyparsing!=3.0.4",
-    "requests-mock",
 ]
-
-
-def is_supported(python: str, sphinx: str) -> bool:
-    return not (python == "3.6" and sphinx not in ["3.2"])
 
 
 def run_tests(session, sphinx):
@@ -30,8 +24,6 @@ def run_tests(session, sphinx):
 
 @session(python=PYTHON_VERSIONS)
 @nox.parametrize("sphinx", SPHINX_VERSIONS)
-def tests(session, sphinx):
-    if is_supported(session.python, sphinx):
-        run_tests(session, sphinx)
-    else:
-        session.skip("unsupported combination")
+@nox.parametrize("sphinx_needs", SPHINX_NEEDS_VERSIONS)
+def tests(session, sphinx, sphinx_needs):
+    run_tests(session, sphinx)
