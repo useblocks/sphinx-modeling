@@ -20,7 +20,7 @@ import sys
 #
 from typing import List, Literal, Optional, Union
 
-from pydantic import BaseModel, Extra, Field, ValidationError, constr, validator
+from pydantic import BaseModel, Extra, Field, ValidationError, conlist, constr, validator
 from sphinx_needs_modeling.modeling.defaults import NEEDS_MODELING_REMOVE_FIELDS
 from sphinx_needs_modeling.modeling.main import BaseModelNeeds, validator_links
 
@@ -49,7 +49,13 @@ needs_types = [
     {"directive": "test", "title": "Test Case", "prefix": "TC_", "color": "#DCB239", "style": "node"},
 ]
 
-needs_extra_options = ["owner", "priority", "importance", "active"]
+needs_extra_options = [
+    "active",
+    "impact",
+    "importance",
+    "owner",
+    "priority",
+]
 
 needs_extra_links = [
     {
@@ -88,36 +94,44 @@ for need_type in needs_types:
 needs_bool = Literal["True", "False"]
 
 # usage of qualname, see https://stackoverflow.com/a/62943181
-class Impl(BaseModelNeeds, extra=Extra.forbid):
-    id: id_constraints[__qualname__]
-    impact: Optional[Literal["True", "False"]]
+class Story(BaseModelNeeds, extra=Extra.forbid):
+    id: str
+    type: Literal["story"]
+    active: Optional[needs_bool]
+
+    # TODO: allow_reuse is needed due to a bug in _prepare_validator where
+    #       __module__ is undefined here
+    #       (which is perfectly fine as conf.py is not *used* as a module)
+    @validator("id", allow_reuse=True)
+    def check_id(cls, value):
+        return value
 
 
 class Spec(BaseModelNeeds, extra=Extra.forbid):
-    id: id_constraints[__qualname__]
+    id: str
+    type: Literal["spec"]
     importance: Literal["HIGH"]
     active: needs_bool
-    links: List[id_constraints["Story"]]
-
-    _links_check = validator("links", allow_reuse=True)(validator_links)
+    links: conlist(Story, min_items=1, max_items=1)
 
 
-class Story(BaseModelNeeds, extra=Extra.forbid):
-    id: id_constraints[__qualname__]
-    format: Optional[constr(min_length=1)]
-    active: Optional[needs_bool]
+class Impl(BaseModelNeeds, extra=Extra.forbid):
+    id: str
+    type: Literal["impl"]
+    impact: Optional[Literal["True", "False"]]
 
 
 class Test(BaseModelNeeds, extra=Extra.forbid):
-    id: id_constraints[__qualname__]
+    id: str
+    type: Literal["test"]
     impact: Optional[Literal["True", "False"]]
-    parent_need: id_constraints["Impl"]
+    parent_need: Impl
 
 
 needs_modeling_pydantic_models = [
-    Impl,
-    Spec,
     Story,
+    Spec,
+    Impl,
     Test,
 ]
 needs_modeling_remove_fields = NEEDS_MODELING_REMOVE_FIELDS + [
@@ -126,13 +140,11 @@ needs_modeling_remove_fields = NEEDS_MODELING_REMOVE_FIELDS + [
     "is_external",
     "is_need",
     "is_part",
-    "parent_need",
     "parent_needs",
     "section_name",
     "sections",
     "tags",
     "title",
-    "type",
 ]
 
 

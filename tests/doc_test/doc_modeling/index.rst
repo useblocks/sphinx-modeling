@@ -1,8 +1,15 @@
 TEST DOCUMENT MODELING
 ======================
 
-.. story:: Test story
+.. story:: Test story 1
    :id: US_001
+   :active: True
+
+   Some content
+
+.. story:: Test story 2
+   :id: US_002
+   :active: False
 
    Some content
 
@@ -14,6 +21,7 @@ TEST DOCUMENT MODELING
 
 .. impl:: Impl impl1
    :id: IM_001
+   :impact: True
 
    .. test:: Test test1
       :id: TC_001
