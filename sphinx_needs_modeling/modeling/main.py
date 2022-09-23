@@ -205,10 +205,10 @@ def check_model(env: BuildEnvironment, msg_path: str) -> None:
     all_messages = []  # return variable
     global PENDING_NEED_IDS
     for need in needs.values():
-        last_idx_pending_need_ids = len(PENDING_NEED_IDS) - 1
         if need["id"] in PYDANTIC_INSTANCES:
             # this id was handled during links resolution
             continue
+        last_idx_pending_need_ids = len(PENDING_NEED_IDS) - 1
         try:
             # expected model name is the need type with first letter capitalized (this is how Python class are named)
             expected_pydantic_model_name = need["type"].title()
