@@ -2,9 +2,16 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Literal, Optional, Union
 
-from pydantic import BaseModel, Extra, ValidationError, constr, create_model, root_validator, validator
+from pydantic import (
+    BaseModel,
+    Extra,
+    ValidationError,
+    constr,
+    create_model,
+    root_validator,
+    validator,
+)
 from pydantic.fields import Field, ModelField
-
 
 # sphinx-needs internals
 needs = {
@@ -46,9 +53,9 @@ def validator_reuse(cls, v):
 class Story(BaseModel, extra=Extra.forbid):
     id: constr(regex=r"^STORY_[a-zA-Z0-9_]{1,}$")
     status: Literal["open", "done"]
-    specs: Optional[Spec]
-    specs: List[Spec]
-    implspecs: Optional[List[Union[Spec, Impl]]]
+    specs: Spec | None
+    specs: list[Spec]
+    implspecs: list[Spec | Impl] | None
     active: needs_bool
 
     @root_validator(pre=True)
@@ -57,7 +64,7 @@ class Story(BaseModel, extra=Extra.forbid):
         return values
 
     @root_validator()
-    def remove_context(cls, values: Dict[str, ModelField]) -> Dict[str, ModelField]:
+    def remove_context(cls, values: dict[str, ModelField]) -> dict[str, ModelField]:
         return values
 
     _valid_status = validator("status", allow_reuse=True)(validator_reuse)
@@ -71,10 +78,10 @@ class Story(BaseModel, extra=Extra.forbid):
 class Spec(BaseModel, extra=Extra.forbid):
     id: str
     importance: Literal["HIGH"]
-    opt_needs: Optional[List[Story]]
-    needs: List[Story]
+    opt_needs: list[Story] | None
+    needs: list[Story]
     need: Story
-    opt_need: Optional[Story]
+    opt_need: Story | None
 
 
 class Impl(BaseModel, extra=Extra.forbid):
@@ -174,7 +181,7 @@ def add_links_validator(model):
     )
 
 
-def instantiate_links(cls, values: Dict[str, ModelField]) -> Dict[str, ModelField]:
+def instantiate_links(cls, values: dict[str, ModelField]) -> dict[str, ModelField]:
     # available link types in sphinx-modeling:
     #  NeedType
     #  List[NeedType]

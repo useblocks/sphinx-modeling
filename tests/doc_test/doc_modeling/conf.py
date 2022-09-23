@@ -17,18 +17,25 @@ import sys
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-from typing import List, Optional, Union
-
+from typing import Optional
 
 try:
     from typing import Literal
 except ImportError:
     from typing_extensions import Literal
 
-from pydantic import BaseModel, Extra, Field, ValidationError, conlist, constr, validator
+from pydantic import (
+    BaseModel,
+    Extra,
+    Field,
+    ValidationError,
+    conlist,
+    constr,
+    validator,
+)
+
 from sphinx_modeling.modeling.defaults import NEEDS_MODELING_REMOVE_FIELDS
 from sphinx_modeling.modeling.main import BaseModelNeeds
-
 
 sys.path.insert(0, os.path.abspath("."))
 
