@@ -23,7 +23,7 @@ def run_tests(session, sphinx):
 
 
 @session(python=PYTHON_VERSIONS)
-@nox.parametrize("sphinx", SPHINX_VERSIONS)
 @nox.parametrize("sphinx_needs", SPHINX_NEEDS_VERSIONS)
+@nox.parametrize("sphinx", SPHINX_VERSIONS)
 def tests(session, sphinx, sphinx_needs):
     run_tests(session, sphinx)
