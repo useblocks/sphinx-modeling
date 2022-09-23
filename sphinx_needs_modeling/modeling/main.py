@@ -64,6 +64,10 @@ class BaseModelNeeds(BaseModel):
         except KeyError:
             log.warn("Error instantiating links: need has no id")
             raise
+        if need_id in PYDANTIC_INSTANCES:
+            # do nothing as this object is already successfully validated
+            # it can happen when a later need links to an already instantiated need
+            return values
         if need_id not in PENDING_NEED_IDS:
             # remember the id to detect circular references (recursion depth limitation)
             PENDING_NEED_IDS.append(need_id)
