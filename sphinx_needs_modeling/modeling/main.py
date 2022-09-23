@@ -240,14 +240,16 @@ def check_model(env: BuildEnvironment, msg_path: str) -> None:
             # get field values as pydantic does not publish that in ValidationError
             # in all cases, like for regex checks
             # see https://github.com/pydantic/pydantic/issues/784
-            error_fields = set()
-            for error in exc.errors():
-                for field in error["loc"]:
-                    if "regex" in error["type"]:
-                        if field not in error_fields:
-                            messages.append(f"Actual value: {need[field]}")
-                            error_fields.add(field)
-            all_messages.extend(messages)
+            # TODO: the following code breaks in case a nested model is showing the errors;
+            #       the loc is then a tuple
+            # error_fields = set()
+            # for error in exc.errors():
+            #     for field in error["loc"]:
+            #         if "regex" in error["type"]:
+            #             if field not in error_fields:
+            #                 messages.append(f"Actual value: {need[field]}")
+            #                 error_fields.add(field)
+            # all_messages.extend(messages)
             for msg in messages:
                 log.warn(msg)
         except Exception as exc:
