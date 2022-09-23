@@ -95,7 +95,7 @@ needs_bool = Literal["True", "False"]
 
 # usage of qualname, see https://stackoverflow.com/a/62943181
 class Story(BaseModelNeeds, extra=Extra.forbid):
-    id: str
+    id: id_constraints[__qualname__]
     type: Literal["story"]
     active: Optional[needs_bool]
 
@@ -108,7 +108,7 @@ class Story(BaseModelNeeds, extra=Extra.forbid):
 
 
 class Spec(BaseModelNeeds, extra=Extra.forbid):
-    id: str
+    id: id_constraints[__qualname__]
     type: Literal["spec"]
     importance: Literal["HIGH"]
     active: needs_bool
@@ -116,7 +116,7 @@ class Spec(BaseModelNeeds, extra=Extra.forbid):
 
 
 class Impl(BaseModelNeeds, extra=Extra.forbid):
-    id: str
+    id: id_constraints[__qualname__]
     type: Literal["impl"]
     impact: Optional[Literal["True", "False"]]
 
