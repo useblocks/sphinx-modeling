@@ -19,6 +19,9 @@ _build
 docs/github_images/
 .eggs/
 
+.dockerignore
+
+# vscode
 .devcontainer/
 .vscode/
-.dockerignore
+*.code-workspace
