@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Literal, Optional
+from typing import Any, Dict, List, Literal, Optional, Union
 
 from pydantic import BaseModel, Extra, ValidationError, constr, create_model, root_validator, validator
 from pydantic.fields import Field, ModelField
@@ -14,6 +14,7 @@ needs = {
         "status": "open",
         "active": "True",
         "specs": ["SPEC_1"],
+        "implspecs": ["IMPL_1"],
     },
     "SPEC_1": {
         "id": "SPEC_1",
@@ -24,25 +25,17 @@ needs = {
         "need": ["STORY_1"],
         "opt_need": ["STORY_1"],
     },
+    "IMPL_1": {
+        "id": "IMPL_1",
+        "type": "impl",
+    },
 }
 
 
-link_types = ["specs", "opt_needs", "needs", "need", "opt_need", "parent_need"]
+link_types = ["specs", "implspecs", "opt_needs", "needs", "need", "opt_need", "parent_need"]
 
 # user provided models
 needs_bool = Literal["True", "False"]
-
-
-# class BaseModelNeeds(BaseModel):
-
-#     all_needs: Any
-#     env: Any
-
-#     @root_validator()
-#     def remove_context(cls, values: Dict[str, ModelField]) -> Dict[str, ModelField]:
-#         del values["all_needs"]
-#         del values["env"]
-#         return values
 
 
 def validator_reuse(cls, v):
@@ -53,7 +46,9 @@ def validator_reuse(cls, v):
 class Story(BaseModel, extra=Extra.forbid):
     id: constr(regex=r"^STORY_[a-zA-Z0-9_]{1,}$")
     status: Literal["open", "done"]
+    specs: Optional[Spec]
     specs: List[Spec]
+    implspecs: Optional[List[Union[Spec, Impl]]]
     active: needs_bool
 
     @root_validator(pre=True)
@@ -80,6 +75,10 @@ class Spec(BaseModel, extra=Extra.forbid):
     needs: List[Story]
     need: Story
     opt_need: Optional[Story]
+
+
+class Impl(BaseModel, extra=Extra.forbid):
+    id: str
 
 
 Story.update_forward_refs()
@@ -113,6 +112,16 @@ def remove_fields_need(need):
         if key not in ignore_fields:
             out_dict[key] = value
     return out_dict
+
+
+def copy_model(model):
+    new_model = create_model(f"{model.__name__}Copy")
+    new_model.__fields__ = {key: value for key, value in model.__fields__.items()}
+    new_model.__validators__ = {key: value for key, value in model.__validators__.items()}
+    new_model.__pre_root_validators__ = [item for item in model.__pre_root_validators__]
+    new_model.__post_root_validators__ = [item for item in model.__post_root_validators__]
+    new_model.__config__ = model.__config__
+    return new_model
 
 
 def model_remove_links(model):
@@ -164,6 +173,30 @@ def add_links_validator(model):
         f"{model.__name__}NoLinks", **copied_fields, __validators__=validators, __config__=model.__config__
     )
 
+
+def instantiate_links(cls, values: Dict[str, ModelField]) -> Dict[str, ModelField]:
+    # available link types in sphinx-modeling:
+    #  NeedType
+    #  List[NeedType]
+    #  Union[NeedType1, NeedType2, ...]
+    #  List[Union[NeedType1, NeedType2, ...]]
+    for name, links in values.items():
+        if name in link_types and isinstance(links, list):
+            field = cls.__fields__[name]
+            type_str = field._type_display()
+            resolved_needs = []
+            for link in links:
+                need = values["all_needs"][link]
+            pass
+
+    return values
+
+
+def add_root_validator(model):
+    model.__pre_root_validators__.append(instantiate_links)
+    pass
+
+
 model_orig_fields = {}
 
 for need in needs.values():
@@ -178,7 +211,14 @@ for need in needs.values():
         # reduced_model(**reduced_need, all_needs=needs)
         reduced_model_with_env(**reduced_need, all_needs=needs, env={})
     except ValidationError as exc:
-        print("#### Error in reduced_model(**reduced_need)")
+        print(exc)
+
+    model_duplicate = copy_model(model)
+    add_root_validator(model_duplicate)
+    try:
+        # reduced_model(**reduced_need, all_needs=needs)
+        model_duplicate(**need, all_needs=needs, env={})
+    except ValidationError as exc:
         print(exc)
 
     # link_validated_model = add_links_validator(model)
