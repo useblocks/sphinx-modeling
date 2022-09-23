@@ -10,16 +10,15 @@ jobs:
         os: ["ubuntu-latest"]
         # 3.9.8 seems to be broken with type_ast
         # https://www.mail-archive.com/debian-bugs-dist@lists.debian.org/msg1829077.html
-        python-version: ["3.8", "3.9.7", "3.10"]
-        sphinx-version: ['5.0.2']  # "4.0.3", '4.5'
-        exclude:
-          - python-version: "3.10"
-            sphinx-version: "4.0.3"
+        python-version: ["3.7, "3.8", "3.9.7", "3.10"]
+        sphinx-version: ['5.0.2']
+        sphinx-needs-version: ["0.7.9", "1.0.1", "1.0.2"]
         include:
           # Check only newest setups for win server
           - os: "windows-latest"
-            python-version: "3.9.7"
+            python-version: "3.10"
             sphinx-version: "5.0.2"
+            sphinx-needs-version: "1.0.2"
     steps:
       - uses: actions/checkout@v2
       - name: Set Up Python ${{ matrix.python-version }}
@@ -37,11 +36,11 @@ jobs:
           pip freeze
 
       - name: Run Tests on Windows
-        run: nox --non-interactive --session "tests-${{ matrix.python-version }}(sphinx='${{ matrix.sphinx-version }}')" -- --full-trace
+        run: nox --non-interactive --session "tests-${{ matrix.python-version }}(sphinx='${{ matrix.sphinx-version }}', sphinx_needs='${{ matrix.sphinx-needs-version }}')" -- --full-trace
         if: runner.os == 'Windows'
 
       - name: Run Tests on Linux
-        run: nox --non-interactive --session "tests-${{ matrix.python-version }}(sphinx='${{ matrix.sphinx-version }}')" -- --full-trace
+        run: nox --non-interactive --session "tests-${{ matrix.python-version }}(sphinx='${{ matrix.sphinx-version }}', sphinx_needs='${{ matrix.sphinx-needs-version }}')" -- --full-trace
         if: runner.os == 'Linux'
 
   lint:
