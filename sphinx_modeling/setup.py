@@ -3,7 +3,6 @@ import pickle
 from typing import Any, Dict, List
 
 from docutils import nodes
-from pkg_resources import parse_version
 import sphinx
 from sphinx.application import Sphinx
 from sphinx.config import Config
@@ -44,7 +43,7 @@ def setup(app: Sphinx) -> Dict[str, Any]:
     )
 
     # events
-    app.connect("config-inited", sphinx_needs_generate_config)
+    # app.connect("config-inited", sphinx_needs_generate_config)  # not yet implemented
     app.connect("env-before-read-docs", prepare_env)
     app.connect("env-before-read-docs", emit_old_messages)
     app.connect("doctree-resolved", process_models, 1000)  # call this after sphinx-needs finished processing
@@ -114,14 +113,14 @@ def sphinx_needs_generate_config(app: Sphinx, config: Config) -> None:
     # Extra options
     # For details read
     # https://sphinx-needs.readthedocs.io/en/latest/api.html#sphinx_needs.api.configuration.add_extra_option
-    # add_extra_option(app, "file")
+    add_extra_option(app, "file")
 
     # Extra dynamic functions
     # For details about usage read
     # https://sphinx-needs.readthedocs.io/en/latest/api.html#sphinx_needs.api.configuration.add_dynamic_function
-    # add_dynamic_function(app, dummy_func)
+    add_dynamic_function(app, lambda x: x)
 
     # Extra need types
     # For details about usage read
     # https://sphinx-needs.readthedocs.io/en/latest/api.html#sphinx_needs.api.configuration.add_need_type
-    # add_need_type(app, directive="foobar", title="foobar", prefix="FOO_")
+    add_need_type(app, directive="foobar", title="foobar", prefix="FOO_")

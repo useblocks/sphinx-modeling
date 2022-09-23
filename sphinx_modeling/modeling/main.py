@@ -7,11 +7,10 @@ They are unknown to mypy as they are dynamically created.
 
 import os
 import pickle
-import re
-from typing import Any, Dict, List, Literal, Optional, Set, Tuple, Union
+from typing import Any, Dict, List
 
 from pydantic import BaseModel, ValidationError, root_validator
-from pydantic.fields import Field, ModelField
+from pydantic.fields import ModelField
 from sphinx.environment import BuildEnvironment
 from sphinx_modeling.logging import get_logger
 
@@ -136,42 +135,12 @@ class BaseModelNeeds(BaseModel):
         return values
 
 
-def validator_links(
-    value: Union[str, List[str]],
-    values: Dict[str, Any],
-) -> None:
-    """
-    Check whether a link target
-    - is of the right type (str, List[str])
-    - has no duplicates
-    - exists in the needs dictionary
-
-    The needs dictionary is available as all_needs values as set in BaseModelNeeds.
-    """
-    if isinstance(value, str):
-        # invoked with each_item=true
-        links = [value]
-    elif isinstance(value, list) and all(isinstance(elem, str) for elem in value):
-        # is list of strings
-        links = value
-        duplicates = [v for v in links if links.count(v) > 1]
-        unique_duplicates = list(set(duplicates))
-        if unique_duplicates:
-            raise ValueError(f"Duplicate link targets '{', '.join(unique_duplicates)}'")
-    else:
-        raise ValueError(f"Field type is neither str nor List[str]")
-    for link in links:
-        if link not in values["all_needs"]:
-            raise ValueError(f"Cannot find '{link}' in needs dictionary")
-
-
 def check_model(env: BuildEnvironment, msg_path: str) -> None:
     """
     Check all needs against a user defined pydantic model.
 
     :param env: Sphinx environment, source of all needs to be made available for validation
     """
-    log = get_logger(__name__)
     # Only perform calculation if not already done yet
     if env.needs_modeling_workflow["models_checked"]:  # type: ignore
         return
