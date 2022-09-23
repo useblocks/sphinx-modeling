@@ -2,7 +2,7 @@ name: CI
 on: [pull_request]
 jobs:
   tests:
-    name: "${{ matrix.os }}: py${{ matrix.python-version }} sphinx: ${{ matrix.sphinx-version }} sphinx-needs: ${{ sphinx-needs-version }}"
+    name: "${{ matrix.os }}: py${{ matrix.python-version }} sphinx: ${{ matrix.sphinx-version }} sphinx-needs-version: ${{ matrix.sphinx-needs-version }}"
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: true  # Set on "false" to get the results of ALL builds
