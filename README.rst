@@ -67,4 +67,4 @@ Activation
 
 Add **sphinx_modeling** to your extensions::
 
-    extensions = ["sphinx-needs", "sphinx_modeling", ]
+    extensions = ["sphinx_needs", "sphinx_modeling", ]
