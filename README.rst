@@ -1,9 +1,9 @@
-**Complete documentation**: http://sphinx-needs-modeling.readthedocs.io/en/latest/
+**Complete documentation**: http://sphinx-modeling.readthedocs.io/en/latest/
 
 Introduction
 ============
 
-``Sphinx-Needs-Modeling`` allows the definition of models and constraints for objects defined with
+``Sphinx-Modeling`` allows the definition of models and constraints for objects defined with
 `Sphinx-Needs <https://github.com/useblocks/sphinx-needs>`_. They can be validated during the Sphinx build.
 
 Under the hood `pydantic <https://github.com/pydantic/pydantic>`_ is used to provide and validate all models.
@@ -42,26 +42,26 @@ Using poetry
 ------------
 ::
 
-    poetry add sphinx-needs-modeling
+    poetry add sphinx-modeling
 
 
 Using pip
 ---------
 ::
 
-    pip install sphinx-needs-modeling
+    pip install sphinx-modeling
 
 Using sources
 -------------
 ::
 
-    git clone https://github.com/useblocks/sphinx-needs-modeling
-    cd sphinx-needs-modeling
+    git clone https://github.com/useblocks/sphinx-modeling
+    cd sphinx-modeling
     pip install .
 
 Activation
 ----------
 
-Add **sphinx_needs_modeling** to your extensions::
+Add **sphinx_modeling** to your extensions::
 
-    extensions = ["sphinx-needs", "sphinx_needs_modeling", ]
+    extensions = ["sphinx-needs", "sphinx_modeling", ]

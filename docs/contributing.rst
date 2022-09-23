@@ -1,16 +1,16 @@
 Contributing
 ============
 
-This page provides a guide for developers wishing to contribute to **Sphinx-Needs-Modeling**.
+This page provides a guide for developers wishing to contribute to **Sphinx-Modeling**.
 
 Bugs, Features and  PRs
 -----------------------
 
 For **bug reports** and well-described **technical feature requests**, please use our issue tracker:
-|br| https://github.com/useblocks/sphinx-needs-modeling/issues
+|br| https://github.com/useblocks/sphinx-modeling/issues
 
 For **feature ideas** and **questions**, please use our discussion board:
-|br| https://github.com/useblocks/sphinx-needs-modeling/discussions
+|br| https://github.com/useblocks/sphinx-modeling/discussions
 
 If you have already created a **PR**, you can send it in. Our CI workflow will check (test and code styles) and
 a maintainer will perform a review, before we can merge it.
@@ -26,7 +26,7 @@ Your PR should conform with the following rules:
 Installing Dependencies
 -----------------------
 
-**Sphinx-Needs-Modeling** requires only
+**Sphinx-Modeling** requires only
 `Poetry <https://python-poetry.org/>`__ to be installed as a system
 dependency, the rest of the dependencies are 'bootstrapped' and
 installed in an isolated environment by Poetry.
@@ -56,7 +56,7 @@ installed in an isolated environment by Poetry.
 
 List make targets
 -----------------
-**Sphinx-Needs-Modeling** uses ``make`` to invoke most development related actions.
+**Sphinx-Modeling** uses ``make`` to invoke most development related actions.
 
 Use ``make list`` to get a list of available targets.
 
@@ -64,7 +64,7 @@ Use ``make list`` to get a list of available targets.
 
 Build docs
 ----------
-To build the **Sphinx-Needs-Modeling** documentation stored under ``/docs``, run:
+To build the **Sphinx-Modeling** documentation stored under ``/docs``, run:
 
 .. code-block:: bash
 
@@ -104,7 +104,7 @@ Running Tests
 Linting & Formatting
 --------------------
 
-**Sphinx-Needs-Modeling** uses `black <https://github.com/psf/black>`_ and
+**Sphinx-Modeling** uses `black <https://github.com/psf/black>`_ and
 `isort <https://pycqa.github.io/isort/>`_ to format its source code.
 
 .. code-block:: bash

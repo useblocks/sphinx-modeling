@@ -13,7 +13,7 @@ from typing import Any, Dict, List, Literal, Optional, Set, Tuple, Union
 from pydantic import BaseModel, ValidationError, root_validator
 from pydantic.fields import Field, ModelField
 from sphinx.environment import BuildEnvironment
-from sphinx_needs_modeling.logging import get_logger
+from sphinx_modeling.logging import get_logger
 
 
 PYDANTIC_INSTANCES: Dict[str, Any] = {}  # fully created Pydantic instances

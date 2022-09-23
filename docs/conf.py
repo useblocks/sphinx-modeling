@@ -6,7 +6,7 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = "sphinx-needs-modeling"
+project = "sphinx-modeling"
 copyright = "2022, team useblocks"
 author = "team useblocks"
 release = "0.1.0"
@@ -37,16 +37,16 @@ html_sidebars = {
     "**": ["about.html", "navigation.html", "searchbox.html"],
 }
 
-html_logo = "./_static/sphinx-needs-modeling-logo-white.png"
-# html_favicon = "./_static/sphinx-needs-modeling-logo-favicon.png"
+html_logo = "./_static/sphinx-modeling-logo-white.png"
+# html_favicon = "./_static/sphinx-modeling-logo-favicon.png"
 # material theme options (see theme.conf for more information)
 html_theme_options = {
     "icon": {
         "repo": "fontawesome/brands/github-square",
     },
-    "site_url": "https://sphinxcontrib-needs-modeling.readthedocs.io/",
-    "repo_url": "https://github.com/useblocks/sphinxcontrib-needs-modeling",
-    "repo_name": "Sphinx-Needs-Modeling",
+    "site_url": "https://sphinx-modeling.readthedocs.io/",
+    "repo_url": "https://github.com/useblocks/sphinx-modeling",
+    "repo_name": "Sphinx-Modeling",
     "repo_type": "github",
     "edit_uri": "blob/master/docs",
     # "google_analytics": ["UA-XXXXX", "auto"],

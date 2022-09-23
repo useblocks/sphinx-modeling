@@ -6,22 +6,22 @@ Using poetry
 
 .. code-block:: bash
 
-    poetry add sphinx-needs-modeling
+    poetry add sphinx-modeling
 
 Using pip
 ---------
 
 .. code-block:: bash
 
-    pip install sphinx-needs-modeling
+    pip install sphinx-modeling
 
 Using sources
 -------------
 
 .. code-block:: bash
 
-    git clone https://github.com/useblocks/sphinx-needs-modeling
-    cd sphinx-needs-modeling
+    git clone https://github.com/useblocks/sphinx-modeling
+    cd sphinx-modeling
     pip install .
     # or
     poetry install
@@ -30,11 +30,11 @@ Using sources
 Activation
 ----------
 
-For final activation, please add `sphinx_needs_modeling` to the project's extension list of your **conf.py** file.
+For final activation, please add `sphinx_modeling` to the project's extension list of your **conf.py** file.
 
 .. code-block:: python
 
-   extensions = ["sphinx_needs_modeling",]
+   extensions = ["sphinx_modeling",]
 
 For the full configuration, please read :ref:`config`.
 
@@ -62,7 +62,7 @@ Install PlantUML
 .. code-block:: python
 
       extensions = ['sphinxcontrib.plantuml',
-                    'sphinx_needs_modeling']
+                    'sphinx_modeling']
 
 
 5. Configure plantuml in ``conf.py``

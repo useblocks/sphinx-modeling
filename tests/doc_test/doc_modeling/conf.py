@@ -21,8 +21,8 @@ import sys
 from typing import List, Literal, Optional, Union
 
 from pydantic import BaseModel, Extra, Field, ValidationError, conlist, constr, validator
-from sphinx_needs_modeling.modeling.defaults import NEEDS_MODELING_REMOVE_FIELDS
-from sphinx_needs_modeling.modeling.main import BaseModelNeeds, validator_links
+from sphinx_modeling.modeling.defaults import NEEDS_MODELING_REMOVE_FIELDS
+from sphinx_modeling.modeling.main import BaseModelNeeds, validator_links
 
 
 sys.path.insert(0, os.path.abspath("."))
@@ -37,7 +37,7 @@ sys.path.insert(0, os.path.abspath("."))
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 
-extensions = ["sphinx_needs", "sphinx_needs_modeling", "sphinxcontrib.plantuml"]
+extensions = ["sphinx_needs", "sphinx_modeling", "sphinxcontrib.plantuml"]
 
 needs_table_style = "TABLE"
 

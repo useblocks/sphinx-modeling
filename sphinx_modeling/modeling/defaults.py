@@ -1,5 +1,5 @@
 """
-Default values for sphinx-needs-modeling parameters.
+Default values for sphinx-modeling parameters.
 
 Can be overriden in conf.py.
 """
