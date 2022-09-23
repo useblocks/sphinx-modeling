@@ -8,7 +8,7 @@ They are unknown to mypy as they are dynamically created.
 import os
 import pickle
 import re
-from typing import Any, Dict, List, Literal, Optional, Union
+from typing import Any, Dict, List, Literal, Optional, Set, Tuple, Union
 
 from pydantic import BaseModel, ValidationError, root_validator
 from pydantic.fields import Field, ModelField
@@ -16,21 +16,119 @@ from sphinx.environment import BuildEnvironment
 from sphinx_needs_modeling.logging import get_logger
 
 
+PYDANTIC_INSTANCES: Dict[str, Any] = {}  # fully created Pydantic instances
+PENDING_NEED_IDS: List[str] = []  # Pydantic startet building but not ready (resolving links)
+# CICULAR_LOOP_LINKS: List[Tuple[str, str, str]] = []  # Tuple: need id, link field, link target
+log = get_logger(__name__)
+
+
 class BaseModelNeeds(BaseModel):
     """
     Custom Base class to support custom validation against all needs.
 
-    Uses this approach https://github.com/pydantic/pydantic/issues/1170#issuecomment-575233689
+    This approach https://github.com/pydantic/pydantic/issues/1170#issuecomment-575233689
+    to make all needs available to validators.
     Other approaches are Python ContextVars which also works. ContextVars however are hard to
     expose to the end users that run custom validators.
     """
 
+    def __init__(self, **kwargs) -> None:  # type: ignore # kwargs is need specific
+        super().__init__(**kwargs)
+
     all_needs: Any
+    env: Any
 
     @root_validator()
     def remove_context(cls, values: Dict[str, ModelField]) -> Dict[str, ModelField]:
-        """Remove all_needs before others validators run."""
+        """
+        Remove context variables after others validators were executed.
+
+        The values are mainly used in instantiate_links.
+        """
         del values["all_needs"]
+        del values["env"]
+        return values
+
+    @root_validator(pre=True)
+    def instantiate_links(cls, values: Dict[str, ModelField]) -> Dict[str, ModelField]:
+        """
+        Resolve sphinx-needs link targets.
+
+        The function is called by pydantic when
+        1. looping over all needs in check_model
+        2. when a link targets gets resolved and instantiated in this very function
+        """
+        try:
+            # str conversion should not go wrong
+            need_id = str(values["id"])
+        except KeyError:
+            log.warn("Error instantiating links: need has no id")
+            raise
+        if need_id not in PENDING_NEED_IDS:
+            # remember the id to detect circular references (recursion depth limitation)
+            PENDING_NEED_IDS.append(need_id)
+
+        pydantic_models = values["env"].config.needs_modeling_pydantic_models
+        model_name_2_model = {model.__name__: model for model in pydantic_models}
+        sphinx_needs_list_link_types = [link["option"] for link in values["env"].config.needs_extra_links]
+        sphinx_needs_list_link_types.append("parent_needs")
+        sphinx_needs_list_link_types_back = [f"{link}_back" for link in sphinx_needs_list_link_types]
+        sphinx_needs_string_link_types = ["parent_need"]
+
+        for link_type, link_value in values.items():
+            if link_type not in sphinx_needs_list_link_types + sphinx_needs_string_link_types:
+                continue
+            resolved_needs = []
+            if link_type in sphinx_needs_string_link_types:
+                links = [link_value]
+            else:
+                links = link_value
+            for target in links:
+                if target in PENDING_NEED_IDS:
+                    # circular link loop detected
+                    log.warn(f"{need_id}: unsupported circular loop detected for link '{link_type}: {target}'")
+                    log.warn("Ignoring target for validation")
+                    continue
+                if target in PYDANTIC_INSTANCES:
+                    instance = PYDANTIC_INSTANCES[target]
+                else:
+                    try:
+                        resolved_need = values["all_needs"][target]
+                    except KeyError:
+                        log.warn(f"{need_id}: cannot resolve link '{link_type}: {target}'")
+                        log.warn("Ignoring target for validation")
+                        continue
+                    resolved_need_model = model_name_2_model[resolved_need["type"].title()]
+                    resolved_need_model_fields = [
+                        name
+                        for name, field in resolved_need_model.__fields__.items()
+                        if isinstance(field, ModelField) and name not in ["all_needs", "env"]
+                    ]
+                    need_relevant_fields = _remove_unrequested_fields(
+                        resolved_need,
+                        resolved_need_model_fields,
+                        values["env"].config.needs_modeling_remove_fields,
+                        values["env"].config.needs_modeling_remove_backlinks,
+                        sphinx_needs_list_link_types_back,
+                    )
+                    instance = need_relevant_fields
+                    instance.update(
+                        {
+                            "all_needs": values["all_needs"],
+                            "env": values["env"],
+                        }
+                    )
+                    # instance = resolved_need_model(
+                    #     **need_relevant_fields, all_needs=values["all_needs"], env=values["env"]
+                    # )  # run pydantic
+                    # PYDANTIC_INSTANCES[resolved_need["id"]] = instance
+                resolved_needs.append(instance)
+
+            if link_type in sphinx_needs_string_link_types:
+                if resolved_needs:
+                    values[link_type] = resolved_needs[0]
+            else:
+                values[link_type] = resolved_needs
         return values
 
 
@@ -94,10 +192,19 @@ def check_model(env: BuildEnvironment, msg_path: str) -> None:
     # build a dictionay to look up user model names
     model_name_2_model = {model.__name__: model for model in pydantic_models}
 
+    # for model in pydantic_models:
+    #     # later needed for circular model handling
+    #     model.update_forward_refs()
+
     logged_types_without_model = set()  # helper to avoid duplicate log output
     all_successful = True
     all_messages = []  # return variable
+    global PENDING_NEED_IDS
     for need in needs.values():
+        last_idx_pending_need_ids = len(PENDING_NEED_IDS) - 1
+        if need["id"] in PYDANTIC_INSTANCES:
+            # this id was handled during links resolution
+            continue
         try:
             # expected model name is the need type with first letter capitalized (this is how Python class are named)
             expected_pydantic_model_name = need["type"].title()
@@ -112,12 +219,16 @@ def check_model(env: BuildEnvironment, msg_path: str) -> None:
                     env.config.needs_modeling_remove_backlinks,
                     sphinx_needs_link_types_back,
                 )
-                model(**need_relevant_fields, all_needs=needs)  # run pydantic
+                instance = model(**need_relevant_fields, all_needs=needs, env=env)  # run pydantic
+                PENDING_NEED_IDS.remove(need["id"])
+                PYDANTIC_INSTANCES[need["id"]] = instance
             else:
                 if need["type"] not in logged_types_without_model:
                     log.warn(f"Model validation: no model defined for need type '{need['type']}'")
                     logged_types_without_model.add(need["type"])
         except ValidationError as exc:
+            # remove all pending IDs that were about to be instantiated
+            PENDING_NEED_IDS = PENDING_NEED_IDS[: last_idx_pending_need_ids + 1]
             all_successful = False
             messages = []
             messages.append(f"Model validation: failed for need {need['id']}")
@@ -135,6 +246,9 @@ def check_model(env: BuildEnvironment, msg_path: str) -> None:
             all_messages.extend(messages)
             for msg in messages:
                 log.warn(msg)
+        except Exception as exc:
+            log.warn(f"Model validation: failed for need {need['id']}")
+            log.warn(exc.__repr__())
     if all_successful:
         log.info("Validation was successful!")
 
