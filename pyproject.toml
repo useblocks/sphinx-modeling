@@ -83,6 +83,12 @@ files = "sphinx_modeling"
 ignore_missing_imports = true
 namespace_packages = true
 
+[[tool.mypy.overrides]]
+module = [
+  'sphinx_modeling.modeling.work_in_progress.all_in_one',
+]
+ignore_errors = true
+
 [build-system]
 requires = ["setuptools", "poetry_core>=1.0.8"]  # setuptools for deps like plantuml
 build-backend = "poetry.core.masonry.api"

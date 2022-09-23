@@ -2,16 +2,19 @@ import os
 import pickle
 from typing import Any, Dict, List
 
-from docutils import nodes
 import sphinx
+from docutils import nodes
 from sphinx.application import Sphinx
 from sphinx.config import Config
 from sphinx.environment import BuildEnvironment
 from sphinx_needs.api import add_dynamic_function, add_extra_option, add_need_type
-from sphinx_modeling.logging import get_logger
-from sphinx_modeling.modeling.defaults import NEEDS_MODELING_REMOVE_BACKLINKS, NEEDS_MODELING_REMOVE_FIELDS
-from sphinx_modeling.modeling.main import check_model
 
+from sphinx_modeling.logging import get_logger
+from sphinx_modeling.modeling.defaults import (
+    NEEDS_MODELING_REMOVE_BACKLINKS,
+    NEEDS_MODELING_REMOVE_FIELDS,
+)
+from sphinx_modeling.modeling.main import check_model
 
 sphinx_version = sphinx.__version__
 
@@ -89,7 +92,7 @@ def emit_old_messages(app: Sphinx, env: BuildEnvironment, docnames: List[str]) -
                 messages = pickle.load(fp)
                 for msg in messages:
                     log.warn(msg)
-        except FileNotFoundError as exc:
+        except FileNotFoundError:
             # no messages can be emitted, maybe the file was manually deleted
             pass
 
