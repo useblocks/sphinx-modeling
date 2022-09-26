@@ -25,9 +25,9 @@ User defined `root validators <https://pydantic-docs.helpmanual.io/usage/validat
 - ``all_needs`` the needs dictionary
 - ``env`` the Sphinx environment
 
-Pydantic v1 does not offer context variables, so
+Pydantic v1 does not yet offer context variables, so
 `this workaround <https://github.com/pydantic/pydantic/issues/1170#issuecomment-575233689>`_ is used.
-The feature is however planned for pydantic v2 (see `here <https://github.com/pydantic/pydantic/issues/1549>`__ and
+The feature is however planned for Pydantic v2 (see `here <https://github.com/pydantic/pydantic/issues/1549>`__ and
 `here <https://pydantic-docs.helpmanual.io/blog/pydantic-v2/#validation-context>`__).
 
 Validate linked need
