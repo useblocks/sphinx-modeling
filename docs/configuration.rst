@@ -46,8 +46,7 @@ Default: ``[]``
 
    modeling_models = [Story, Spec]
 
-See `here <https://github.com/useblocks/sphinx-modeling/blob/main/tests/doc_test/doc_modeling/conf.py>`_
-for a full example.
+The repository contains a `full example <https://github.com/useblocks/sphinx-modeling/blob/main/tests/doc_test/doc_modeling/conf.py>`_. More examples and details can be found in the :ref:`modeling_guidelines`.
 
 .. _modeling_remove_fields:
 

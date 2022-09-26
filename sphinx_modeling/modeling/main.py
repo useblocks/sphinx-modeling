@@ -225,6 +225,7 @@ def check_model(env: BuildEnvironment, msg_path: str) -> None:
             for msg in messages:
                 log.warn(msg)
         except Exception as exc:
+            all_successful = False
             log.warn(f"Model validation: failed for need {need['id']}")
             log.warn(exc.__repr__())
     if all_successful:

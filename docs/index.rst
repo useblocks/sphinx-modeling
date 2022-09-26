@@ -43,6 +43,7 @@ Generation of the following ``Sphinx-Needs`` configurations from a model configu
 
    installation
    configuration
+   modeling
    contributing
    support
    changelog
