@@ -3,8 +3,44 @@
 Modeling guidelines
 ===================
 
-Validators
+Model names
+-----------
+
+The validation logic passes each need object to Pydantic. The need type is used to look up the correct model in
+the configuration list :ref:`modeling_models`.
+Therefore each user provided Pydantic class name must conform to the pattern ``need['type'].title()``.
+A need type called ``spec`` results in a class name ``Spec``. A type ``CustomSpec`` would result in ``Customspec``.
+
+Base class
 ----------
+
+Each user provided Pydantic model must inherit from ``BaseModelNeeds``.
+
+Need link resolution
+--------------------
+
+The base class ``BaseModelNeeds`` features a root validator of type ``pre`` that runs before any other validators.
+It ensures that linked needs will be provided as nested models, so a user model can directly define need links:
+
+.. code-block:: python
+
+    class Story(BaseModelNeeds):
+        id: str
+        type: Literal["story"]
+
+    class Spec(BaseModelNeeds):
+        id: str
+        type: Literal["spec"]
+
+    class Impl(BaseModelNeeds):
+        id: str
+        type: Literal["spec"]
+        links: conlist(Union[Story, Spec] , min_items=1, max_items=1)
+
+In above example each ``Impl`` must link to exactly one ``Story`` or ``Spec``.
+
+Custom validators
+-----------------
 
 .. warning::
     The currently used Pydantic version may raise an exception for custom validators:
@@ -29,6 +65,7 @@ Pydantic v1 does not yet offer context variables, so
 `this workaround <https://github.com/pydantic/pydantic/issues/1170#issuecomment-575233689>`_ is used.
 The feature is however planned for Pydantic v2 (see `here <https://github.com/pydantic/pydantic/issues/1549>`__ and
 `here <https://pydantic-docs.helpmanual.io/blog/pydantic-v2/#validation-context>`__).
+
 
 Validate linked need
 --------------------

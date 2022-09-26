@@ -19,6 +19,7 @@ Options
 
 All configuration options starts with the prefix ``modeling_`` for Sphinx-Modeling.
 
+.. _modeling_models:
 
 modeling_models
 ~~~~~~~~~~~~~~~
