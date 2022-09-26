@@ -165,9 +165,12 @@ def check_model(env: BuildEnvironment, msg_path: str) -> None:
     # build a dictionay to look up user model names
     model_name_2_model = {model.__name__: model for model in pydantic_models}
 
-    # for model in pydantic_models:
-    #     # later needed for circular model handling
-    #     model.update_forward_refs()
+    for model in pydantic_models:
+        # invert the order of root validators to have
+        # context variables available in user defined root validators
+        model.__post_root_validators__.reverse()
+        # # later needed for circular model handling
+        # model.update_forward_refs()
 
     logged_types_without_model = set()  # helper to avoid duplicate log output
     all_successful = True
@@ -222,6 +225,7 @@ def check_model(env: BuildEnvironment, msg_path: str) -> None:
             for msg in messages:
                 log.warn(msg)
         except Exception as exc:
+            all_successful = False
             log.warn(f"Model validation: failed for need {need['id']}")
             log.warn(exc.__repr__())
     if all_successful:
