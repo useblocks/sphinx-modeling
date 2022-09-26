@@ -7,7 +7,7 @@ Validators
 ----------
 
 .. warning::
-    The currently used Pydantic version may raise an exception when custom validators:
+    The currently used Pydantic version may raise an exception for custom validators:
 
     .. code-block:: text
 
