@@ -9,24 +9,26 @@ Modeling for sphinx-needs
 
 Arbitrary constraints can be enforced such as:
 
-- multiplicity of value fields (need options)
-- multiplicity of link fields
+- value constraints for need options
+- multiplicity of need link options
 - typed fields (string, regex, int, enums)
-- no additional fields
+- allow or disallow additional options
 - outgoing links must target specific need types or union of types
-- need type must be nested within another need type
+- need type must be nested within another need type (via ``parent_need``)
 - need type must be part of a specific document or chapter/section
 - custom validators
+
+.. warning:: This Sphinx extension is in an early stage and subject to breaking changes.
 
 Motivation
 ==========
 
 Requirements management with ``Sphinx-Needs`` and docs-as-code traditionally comes at the cost of complete freedom for developers. ``need_types``, ``needs_extra_options`` and ``needs_extra_links`` are global and all ``need_types`` can
-use all ``needs_extra_options``/``needs_extra_options``.
+use all ``needs_extra_options``/``needs_extra_links`` by default.
 
-This is a problem for organisations that want to enforce standards on objects.
-Especially when migrating parts of the requirements management system to ``Sphinx-Needs`` it is crucial to enforce the same
-constraints as defined in existing solutions. Doing so enables technological interoperability.
+This is a problem for organizations that want to enforce well defined (UML) standards on objects.
+Especially when migrating parts of the requirements management system to ``Sphinx-Needs`` it is crucial to be
+consistent with existing solutions. Doing so enables technological interoperability.
 
 Planned features
 ================
