@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "sphinx-modeling"
 
-# !! Don't miss updates in needs.py, conf.py, changelog.rst, and .github/workflows/docker !!!
+# Don't miss updates in sphinx_modeling/setup.py, docs/conf.py and docs/changelog.rst
 version = "0.1.0"
 
 description = "Sphinx extension to enable modeling and set constraints for sphinx-needs"
