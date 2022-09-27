@@ -43,12 +43,12 @@ For the full configuration, please read :ref:`config`.
 PlantUML support
 ----------------
 
-The model export uses `PlantUML <http://plantuml.com>`_ and the
+A feature is planned for Sphinx-Modeling to export the defined user models into a diagram.
+For this `PlantUML <http://plantuml.com>`_ will be used and the
 Sphinx-extension `sphinxcontrib-plantuml <https://pypi.org/project/sphinxcontrib-plantuml/>`_ for generating the
 diagrams.
 
 Both must be available and correctly configured to work.
-
 
 Install PlantUML
 ~~~~~~~~~~~~~~~~
@@ -61,8 +61,7 @@ Install PlantUML
 
 .. code-block:: python
 
-      extensions = ['sphinxcontrib.plantuml',
-                    'sphinx_modeling']
+      extensions = ['sphinx_needs', 'sphinx_modeling', 'sphinxcontrib.plantuml', ]
 
 
 5. Configure plantuml in ``conf.py``
