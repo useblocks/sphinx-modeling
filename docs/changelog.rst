@@ -19,7 +19,7 @@ Please see all `Unreleased Changes`_ for more information.
 Changed
 ~~~~~~~
 
-- docs: split license from changelog
+- docs: split license from changelog (`PR #8 <https://github.com/useblocks/sphinx-modeling/pull/8>`_)
 
 0.1.0 - 2022-07-11
 ------------------
