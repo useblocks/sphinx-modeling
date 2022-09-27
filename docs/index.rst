@@ -48,4 +48,5 @@ Generation of the following ``Sphinx-Needs`` configurations from a model configu
    modeling
    contributing
    support
+   license
    changelog

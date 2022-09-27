@@ -1,13 +1,7 @@
 .. _changelog:
 
-Changelog & License
-===================
-
-License
--------
-
-.. include:: ../LICENSE
-
+Changelog
+=========
 
 .. _Unreleased Changes: https://github.com/useblocks/sphinx-modeling/compare/0.1.0...HEAD
 .. _Keep a Changelog: https://keepachangelog.com/en/1.0.0/
@@ -21,6 +15,11 @@ Unreleased
 ------------
 
 Please see all `Unreleased Changes`_ for more information.
+
+Changed
+~~~~~~~
+
+- docs: split license from changelog (`PR #8 <https://github.com/useblocks/sphinx-modeling/pull/8>`_)
 
 0.1.0 - 2022-07-11
 ------------------
