@@ -2,6 +2,7 @@
 import os
 from typing import Optional
 
+
 try:
     from typing import Literal
 except ImportError:
@@ -11,6 +12,7 @@ from pydantic import Extra, conlist, constr, validator
 
 from sphinx_modeling.modeling.defaults import MODELING_REMOVE_FIELDS
 from sphinx_modeling.modeling.main import BaseModelNeeds
+
 
 # pylint does not consider Sphinx
 # pylint: disable=unused-variable, invalid-name, redefined-builtin

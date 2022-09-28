@@ -5,9 +5,9 @@ It contains some mypy '# type: ignore' which are used for Sphinx environment fie
 They are unknown to mypy as they are dynamically created.
 """
 
+from contextlib import suppress
 import os
 import pickle
-from contextlib import suppress
 from typing import Any, Dict, List
 
 from pydantic import BaseModel, ValidationError, root_validator
@@ -15,6 +15,7 @@ from pydantic.fields import ModelField
 from sphinx.environment import BuildEnvironment
 
 from sphinx_modeling.logging import get_logger
+
 
 PYDANTIC_INSTANCES: Dict[str, Any] = {}  # fully created Pydantic instances
 PENDING_NEED_IDS: List[str] = []  # Pydantic startet building but not ready (resolving links)

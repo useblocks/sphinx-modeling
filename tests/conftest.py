@@ -5,6 +5,7 @@ from tempfile import mkdtemp
 import pytest
 from sphinx.testing.path import path
 
+
 pytest_plugins = "sphinx.testing.fixtures"
 
 

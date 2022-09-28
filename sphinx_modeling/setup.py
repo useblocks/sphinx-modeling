@@ -1,7 +1,7 @@
 """Extension entry point for Sphinx."""
+from contextlib import suppress
 import os
 import pickle
-from contextlib import suppress
 from typing import Any, Dict, List
 
 from docutils import nodes
@@ -11,11 +11,9 @@ from sphinx.environment import BuildEnvironment
 from sphinx_needs.api import add_dynamic_function, add_extra_option, add_need_type
 
 from sphinx_modeling.logging import get_logger
-from sphinx_modeling.modeling.defaults import (
-    MODELING_REMOVE_BACKLINKS,
-    MODELING_REMOVE_FIELDS,
-)
+from sphinx_modeling.modeling.defaults import MODELING_REMOVE_BACKLINKS, MODELING_REMOVE_FIELDS
 from sphinx_modeling.modeling.main import check_model
+
 
 VERSION = "0.1.1"
 MODELING_MSG_FOLDER = ".modeling"

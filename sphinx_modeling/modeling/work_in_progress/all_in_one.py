@@ -2,16 +2,9 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Literal, Optional, Union
 
-from pydantic import (
-    BaseModel,
-    Extra,
-    ValidationError,
-    constr,
-    create_model,
-    root_validator,
-    validator,
-)
+from pydantic import BaseModel, Extra, ValidationError, constr, create_model, root_validator, validator
 from pydantic.fields import Field, ModelField
+
 
 # sphinx-needs internals
 needs = {
