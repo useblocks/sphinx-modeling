@@ -7,6 +7,7 @@ They are unknown to mypy as they are dynamically created.
 
 import os
 import pickle
+from contextlib import suppress
 from typing import Any, Dict, List
 
 from pydantic import BaseModel, ValidationError, root_validator
@@ -31,14 +32,11 @@ class BaseModelNeeds(BaseModel):
     expose to the end users that run custom validators.
     """
 
-    def __init__(self, **kwargs) -> None:  # type: ignore # kwargs is need specific
-        super().__init__(**kwargs)
-
     all_needs: Any
     env: Any
 
     @root_validator()
-    def remove_context(cls, values: Dict[str, ModelField]) -> Dict[str, ModelField]:
+    def remove_context(cls, values: Dict[str, ModelField]) -> Dict[str, ModelField]:  # noqa: N805
         """
         Remove context variables after others validators were executed.
 
@@ -49,7 +47,7 @@ class BaseModelNeeds(BaseModel):
         return values
 
     @root_validator(pre=True)
-    def instantiate_links(cls, values: Dict[str, ModelField]) -> Dict[str, ModelField]:
+    def instantiate_links(cls, values: Dict[str, Any]) -> Dict[str, Any]:  # noqa: N805
         """
         Resolve sphinx-needs link targets.
 
@@ -61,7 +59,7 @@ class BaseModelNeeds(BaseModel):
             # str conversion should not go wrong
             need_id = str(values["id"])
         except KeyError:
-            log.warn("Error instantiating links: need has no id")
+            log.warning("Error instantiating links: need has no id")
             raise
         if need_id in PYDANTIC_INSTANCES:
             # do nothing as this object is already successfully validated
@@ -83,14 +81,16 @@ class BaseModelNeeds(BaseModel):
                 continue
             resolved_needs = []
             if link_type in sphinx_needs_string_link_types:
+                assert isinstance(link_value, str)
                 links = [link_value]
             else:
+                assert isinstance(link_value, list)
                 links = link_value
             for target in links:
                 if target in PENDING_NEED_IDS:
                     # circular link loop detected
-                    log.warn(f"{need_id}: unsupported circular loop detected for link '{link_type}: {target}'")
-                    log.warn("Ignoring target for validation")
+                    log.warning(f"{need_id}: unsupported circular loop detected for link '{link_type}: {target}'")
+                    log.warning("Ignoring target for validation")
                     continue
                 if target in PYDANTIC_INSTANCES:
                     instance = PYDANTIC_INSTANCES[target]
@@ -98,8 +98,8 @@ class BaseModelNeeds(BaseModel):
                     try:
                         resolved_need = values["all_needs"][target]
                     except KeyError:
-                        log.warn(f"{need_id}: cannot resolve link '{link_type}: {target}'")
-                        log.warn("Ignoring target for validation")
+                        log.warning(f"{need_id}: cannot resolve link '{link_type}: {target}'")
+                        log.warning("Ignoring target for validation")
                         continue
                     resolved_need_model = model_name_2_model[resolved_need["type"].title()]
                     resolved_need_model_fields = [
@@ -146,10 +146,8 @@ def check_model(env: BuildEnvironment, msg_path: str) -> None:
         return
 
     # remove outdated messages file
-    try:
+    with suppress(OSError):
         os.remove(msg_path)
-    except OSError:
-        pass
 
     needs = env.needs_all_needs  # type: ignore
     # all_needs.set(needs)
@@ -174,7 +172,7 @@ def check_model(env: BuildEnvironment, msg_path: str) -> None:
 
     logged_types_without_model = set()  # helper to avoid duplicate log output
     all_successful = True
-    all_messages = []  # return variable
+    all_messages: List[str] = []  # return variable
     global PENDING_NEED_IDS
     for need in needs.values():
         if need["id"] in PYDANTIC_INSTANCES:
@@ -200,15 +198,14 @@ def check_model(env: BuildEnvironment, msg_path: str) -> None:
                 PYDANTIC_INSTANCES[need["id"]] = instance
             else:
                 if need["type"] not in logged_types_without_model:
-                    log.warn(f"Model validation: no model defined for need type '{need['type']}'")
+                    log.warning(f"Model validation: no model defined for need type '{need['type']}'")
                     logged_types_without_model.add(need["type"])
         except ValidationError as exc:
             # remove all pending IDs that were about to be instantiated
             PENDING_NEED_IDS = PENDING_NEED_IDS[: last_idx_pending_need_ids + 1]
             all_successful = False
-            messages = []
-            messages.append(f"Model validation: failed for need {need['id']}")
-            messages.append(str(exc))
+            all_messages.append(f"Model validation: failed for need {need['id']}")
+            all_messages.append(str(exc))
             # get field values as pydantic does not publish that in ValidationError
             # in all cases, like for regex checks
             # see https://github.com/pydantic/pydantic/issues/784
@@ -222,12 +219,10 @@ def check_model(env: BuildEnvironment, msg_path: str) -> None:
             #                 messages.append(f"Actual value: {need[field]}")
             #                 error_fields.add(field)
             # all_messages.extend(messages)
-            for msg in messages:
-                log.warn(msg)
-        except Exception as exc:
+        except Exception as exc:  # pylint: disable=broad-except # user validators might throw anything
             all_successful = False
-            log.warn(f"Model validation: failed for need {need['id']}")
-            log.warn(exc.__repr__())
+            all_messages.append(f"Model validation: failed for need {need['id']}")
+            all_messages.append(repr(exc))
     if all_successful:
         log.info("Validation was successful!")
 
@@ -235,6 +230,8 @@ def check_model(env: BuildEnvironment, msg_path: str) -> None:
     env.needs_modeling_workflow["models_checked"] = True  # type: ignore
 
     if all_messages:
+        for msg in all_messages:
+            log.warning(msg)
         dir_name = os.path.dirname(os.path.abspath(msg_path))
         if not os.path.exists(dir_name):
             os.makedirs(dir_name)
@@ -242,23 +239,23 @@ def check_model(env: BuildEnvironment, msg_path: str) -> None:
             pickle.dump(all_messages, fp)
 
 
-def _value_allowed(v: Any) -> bool:
+def _value_allowed(value: Any) -> bool:
     """Check whether a given need field is allowed for validation."""
-    if v is None:
+    if value is None:
         return False
-    if isinstance(v, bool):
+    if isinstance(value, bool):
         # useful for flags such as is_need
         return True
-    elif isinstance(v, (str, list)):
+    elif isinstance(value, (str, list)):
         # do not return empty strings or lists - they are never user defined as RST does not support empty options
-        return bool(v)
+        return bool(value)
     else:
         # don't return all other types (such as class instances like content_node)
         return False
 
 
 def _remove_unrequested_fields(
-    d: Any,
+    need: Dict[str, Any],
     model_fields: List[str],
     remove_fields: List[str],
     remove_backlinks: bool,
@@ -277,7 +274,7 @@ def _remove_unrequested_fields(
     :param sphinx_needs_link_types_back: list of sphinx-needs link backreference names (e.g. blocks -> blocks_back)
     """
     output_dict = {}
-    for key, value in d.items():
+    for key, value in need.items():
         if not _value_allowed(value):
             # type check and empty check
             continue

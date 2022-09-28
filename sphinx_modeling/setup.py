@@ -1,8 +1,9 @@
+"""Extension entry point for Sphinx."""
 import os
 import pickle
+from contextlib import suppress
 from typing import Any, Dict, List
 
-import sphinx
 from docutils import nodes
 from sphinx.application import Sphinx
 from sphinx.config import Config
@@ -16,17 +17,13 @@ from sphinx_modeling.modeling.defaults import (
 )
 from sphinx_modeling.modeling.main import check_model
 
-sphinx_version = sphinx.__version__
-
 VERSION = "0.1.0"
 MODELING_MSG_FOLDER = ".modeling"
 MODELING_MSG_FILE = "messages.pickle"
 
 
 def setup(app: Sphinx) -> Dict[str, Any]:
-    """
-    Setup the extension.
-    """
+    """Setup the extension."""
     log = get_logger(__name__)
     log.info("Setting up sphinx-modeling extension")
 
@@ -80,6 +77,7 @@ def process_models(app: Sphinx, doctree: nodes.document, fromdocname: str) -> No
 
 
 def emit_old_messages(app: Sphinx, env: BuildEnvironment, docnames: List[str]) -> None:
+    """Emit previous log messages in case no document changed in an incremental build."""
     if not docnames:
         # incremental build detected without a single document changed which means sphinx-needs
         # does not calculate parent_needs, parent_need and backlinks; this happens only
@@ -87,14 +85,11 @@ def emit_old_messages(app: Sphinx, env: BuildEnvironment, docnames: List[str]) -
         # therefore previous messages are logged as those have not changed
         log = get_logger(__name__)
         msg_path = _get_modeling_msg_file_path(app)
-        try:
-            with open(msg_path, "rb") as fp:
-                messages = pickle.load(fp)
-                for msg in messages:
-                    log.warn(msg)
-        except FileNotFoundError:
-            # no messages can be emitted, maybe the file was manually deleted
-            pass
+        with suppress(FileNotFoundError), open(msg_path, "rb") as fp:
+            # if the file does not exist, no messages can be emitted, maybe the file was manually deleted
+            messages = pickle.load(fp)
+            for msg in messages:
+                log.warning(msg)
 
 
 def _get_modeling_msg_file_path(app: Sphinx) -> str:
@@ -102,7 +97,10 @@ def _get_modeling_msg_file_path(app: Sphinx) -> str:
     return os.path.join(app.outdir, MODELING_MSG_FOLDER, MODELING_MSG_FILE)
 
 
-def sphinx_needs_generate_config(app: Sphinx, config: Config) -> None:
+def sphinx_needs_generate_config(
+    app: Sphinx,
+    config: Config,  # pylint: disable=unused-argument
+) -> None:
     """
     Derive configurations need_types, need_extra_options and need_extra_links from user models.
 
@@ -112,7 +110,6 @@ def sphinx_needs_generate_config(app: Sphinx, config: Config) -> None:
     Also a custom field type will be needed to clearly define a needs link field as there
     are other list like need attributes such as sections.
     """
-    pass
     # Extra options
     # For details read
     # https://sphinx-needs.readthedocs.io/en/latest/api.html#sphinx_needs.api.configuration.add_extra_option
