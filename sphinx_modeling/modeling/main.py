@@ -204,9 +204,8 @@ def check_model(env: BuildEnvironment, msg_path: str) -> None:
             # remove all pending IDs that were about to be instantiated
             PENDING_NEED_IDS = PENDING_NEED_IDS[: last_idx_pending_need_ids + 1]
             all_successful = False
-            messages = []
-            messages.append(f"Model validation: failed for need {need['id']}")
-            messages.append(str(exc))
+            all_messages.append(f"Model validation: failed for need {need['id']}")
+            all_messages.append(str(exc))
             # get field values as pydantic does not publish that in ValidationError
             # in all cases, like for regex checks
             # see https://github.com/pydantic/pydantic/issues/784
@@ -220,12 +219,10 @@ def check_model(env: BuildEnvironment, msg_path: str) -> None:
             #                 messages.append(f"Actual value: {need[field]}")
             #                 error_fields.add(field)
             # all_messages.extend(messages)
-            for msg in messages:
-                log.warn(msg)
-        except Exception as exc:
+        except Exception as exc:  # pylint: disable=broad-except # user validators might throw anything
             all_successful = False
-            log.warn(f"Model validation: failed for need {need['id']}")
-            log.warn(exc.__repr__())
+            all_messages.append(f"Model validation: failed for need {need['id']}")
+            all_messages.append(repr(exc))
     if all_successful:
         log.info("Validation was successful!")
 
@@ -233,6 +230,8 @@ def check_model(env: BuildEnvironment, msg_path: str) -> None:
     env.needs_modeling_workflow["models_checked"] = True  # type: ignore
 
     if all_messages:
+        for msg in all_messages:
+            log.warning(msg)
         dir_name = os.path.dirname(os.path.abspath(msg_path))
         if not os.path.exists(dir_name):
             os.makedirs(dir_name)
