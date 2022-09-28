@@ -21,6 +21,11 @@ Changed
 
 - docs: split license from changelog (`PR #8 <https://github.com/useblocks/sphinx-modeling/pull/8>`_)
 
+Fixed
+~~~~~
+
+- consideratin of modeling_remove_backlinks (`PR #10 <https://github.com/useblocks/sphinx-modeling/pull/10>`_)
+
 0.1.0 - 2022-07-11
 ------------------
 
