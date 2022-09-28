@@ -3,7 +3,7 @@
 Changelog
 =========
 
-.. _Unreleased Changes: https://github.com/useblocks/sphinx-modeling/compare/0.1.0...HEAD
+.. _Unreleased Changes: https://github.com/useblocks/sphinx-modeling/compare/0.1.1...HEAD
 .. _Keep a Changelog: https://keepachangelog.com/en/1.0.0/
 .. _Semantic Versioning: https://semver.org/spec/v2.0.0.html
 
@@ -16,6 +16,9 @@ Unreleased
 
 Please see all `Unreleased Changes`_ for more information.
 
+0.1.1 - 2022-09-28
+------------------
+
 Changed
 ~~~~~~~
 
@@ -26,7 +29,7 @@ Fixed
 
 - consideratin of modeling_remove_backlinks (`PR #10 <https://github.com/useblocks/sphinx-modeling/pull/10>`_)
 
-0.1.0 - 2022-07-11
+0.1.0 - 2022-09-27
 ------------------
 
 Added

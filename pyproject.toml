@@ -2,7 +2,7 @@
 name = "sphinx-modeling"
 
 # Don't miss updates in sphinx_modeling/setup.py, docs/conf.py and docs/changelog.rst
-version = "0.1.0"
+version = "0.1.1"
 
 description = "Sphinx extension to enable modeling and set constraints for sphinx-needs"
 authors = ["team useblocks <info@useblocks.com>"]

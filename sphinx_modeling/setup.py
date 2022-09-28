@@ -17,7 +17,7 @@ from sphinx_modeling.modeling.defaults import (
 )
 from sphinx_modeling.modeling.main import check_model
 
-VERSION = "0.1.0"
+VERSION = "0.1.1"
 MODELING_MSG_FOLDER = ".modeling"
 MODELING_MSG_FILE = "messages.pickle"
 
