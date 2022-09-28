@@ -281,7 +281,7 @@ def _remove_unrequested_fields(
         if key not in model_fields:
             if key in remove_fields:
                 continue
-            if isinstance(value, list) and key in sphinx_needs_link_types_back:
+            if isinstance(value, list) and remove_backlinks and key in sphinx_needs_link_types_back:
                 # checking for list type is a safety measure
                 continue
         output_dict[key] = value
