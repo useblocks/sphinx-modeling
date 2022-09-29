@@ -54,7 +54,7 @@ jobs:
       - name: Build Sphinx docs
         run: |
           cd docs
-          make html
+          poetry run make html
       
       # the following steps are only done after pushing to main or merging a PR
       # clone and set up the old gh-pages branch
