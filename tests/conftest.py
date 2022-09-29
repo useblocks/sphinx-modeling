@@ -1,6 +1,5 @@
 """Pytest conftest module containing common test configuration and fixtures."""
 import shutil
-from tempfile import mkdtemp
 
 import pytest
 from sphinx.testing.path import path
@@ -17,25 +16,22 @@ def copy_srcdir_to_tmpdir(srcdir, tmp):
 
 
 @pytest.fixture(scope="function")
-def test_app(make_app, request):
-    # We create a temp-folder on our own, as the util-functions from sphinx and pytest make troubles.
-    # It seems like they reuse certain-temp names
-    sphinx_test_tempdir = path(mkdtemp())
-
+def test_app(make_app, tmp_path, request):
     builder_params = request.param
 
     # copy plantuml.jar to current test temdir
     plantuml_jar_file = path(__file__).parent.abspath() / "doc_test/utils"
-    shutil.copytree(plantuml_jar_file, sphinx_test_tempdir / "utils")
+    shutil.copytree(plantuml_jar_file, tmp_path / "utils")
 
     # copy test srcdir to test temporary directory sphinx_test_tempdir
-    srcdir = builder_params.get("srcdir", None)
-    src_dir = copy_srcdir_to_tmpdir(srcdir, sphinx_test_tempdir)
+    src_dir = builder_params.get("src_dir", None)
+    srcdir_in_tmp = copy_srcdir_to_tmpdir(src_dir, tmp_path)
+    sphinx_srcdir = path(str(srcdir_in_tmp))  # convert to Sphinx path so Sphinx finds all needed methods
 
     # return sphinx.testing fixture make_app and new srcdir which in sphinx_test_tempdir
     app = make_app(
         buildername=builder_params.get("buildername", "html"),
-        srcdir=src_dir,
+        srcdir=sphinx_srcdir,
         freshenv=builder_params.get("freshenv", None),
         confoverrides=builder_params.get("confoverrides", None),
         status=builder_params.get("status", None),
@@ -46,6 +42,3 @@ def test_app(make_app, request):
     )
 
     yield app
-
-    # cleanup test temporary directory
-    shutil.rmtree(sphinx_test_tempdir, False)
