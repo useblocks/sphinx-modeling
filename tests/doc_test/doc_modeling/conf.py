@@ -17,7 +17,7 @@ from sphinx_modeling.modeling.main import BaseModelNeeds
 # pylint does not consider Sphinx
 # pylint: disable=unused-variable, invalid-name, redefined-builtin
 
-extensions = ["sphinx_needs", "sphinx_modeling", "sphinxcontrib.plantuml"]
+extensions = ["sphinx_needs", "sphinx_modeling"]
 
 needs_table_style = "TABLE"
 
