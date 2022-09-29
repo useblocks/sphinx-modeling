@@ -27,7 +27,7 @@ Changed
 Fixed
 ~~~~~
 
-- consideratin of modeling_remove_backlinks (`PR #10 <https://github.com/useblocks/sphinx-modeling/pull/10>`_)
+- correct handling of modeling_remove_backlinks (`PR #10 <https://github.com/useblocks/sphinx-modeling/pull/10>`_)
 
 0.1.0 - 2022-09-27
 ------------------
