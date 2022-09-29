@@ -32,12 +32,12 @@ jobs:
         run: poetry install
       - name: Final package list
         run: |
-          pip freeze
+          poetry show --all
       - name: Run Tests on Windows
-        run: nox --non-interactive --session "tests-${{ matrix.python-version }}(sphinx='${{ matrix.sphinx-version }}', sphinx_needs='${{ matrix.sphinx-needs-version }}')" -- --full-trace
+        run: poetry run nox --non-interactive --session "tests-${{ matrix.python-version }}(sphinx='${{ matrix.sphinx-version }}', sphinx_needs='${{ matrix.sphinx-needs-version }}')" -- --full-trace
         if: runner.os == 'Windows'
       - name: Run Tests on Linux
-        run: nox --non-interactive --session "tests-${{ matrix.python-version }}(sphinx='${{ matrix.sphinx-version }}', sphinx_needs='${{ matrix.sphinx-needs-version }}')" -- --full-trace
+        run: poetry run nox --non-interactive --session "tests-${{ matrix.python-version }}(sphinx='${{ matrix.sphinx-version }}', sphinx_needs='${{ matrix.sphinx-needs-version }}')" -- --full-trace
         if: runner.os == 'Linux'
 
   lint:
@@ -45,6 +45,8 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
+      - name: Install poetry
+        run: pipx install poetry
       - name: Set Up Python
         uses: actions/setup-python@v4
         with:
