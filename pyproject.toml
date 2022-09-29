@@ -39,6 +39,7 @@ pydantic = "^1.9.2"
 sphinx = ">=5.0"
 sphinx_needs = ">=1.0.1"
 typing-extensions = {version = "^4.3.0", python = "~3.7"}  # needed for typing Literal
+sphinxcontrib-plantuml = "^0.24"  # needed as sphinx-needs has it only in [tool.poetry.dev-dependencies]
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^2"
