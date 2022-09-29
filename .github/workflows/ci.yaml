@@ -33,10 +33,10 @@ jobs:
         run: |
           poetry show --all
       - name: Run Tests on Windows
-        run: poetry run nox --non-interactive --session "tests-${{ matrix.python-version }}(sphinx='${{ matrix.sphinx-version }}', sphinx_needs='${{ matrix.sphinx-needs-version }}')" -- --full-trace
+        run: poetry run nox --non-interactive --session "tests-${{ matrix.python-version }}(sphinx='${{ matrix.sphinx-version }}', sphinx_needs='${{ matrix.sphinx-needs-version }}')"
         if: runner.os == 'Windows'
       - name: Run Tests on Linux
-        run: poetry run nox --non-interactive --session "tests-${{ matrix.python-version }}(sphinx='${{ matrix.sphinx-version }}', sphinx_needs='${{ matrix.sphinx-needs-version }}')" -- --full-trace
+        run: poetry run nox --non-interactive --session "tests-${{ matrix.python-version }}(sphinx='${{ matrix.sphinx-version }}', sphinx_needs='${{ matrix.sphinx-needs-version }}')"
         if: runner.os == 'Linux'
 
   lint:
