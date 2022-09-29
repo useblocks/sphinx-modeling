@@ -16,7 +16,7 @@ def run_tests(session, sphinx, sphinx_needs):
     session.run("make", "test", external=True)  # runs 'poetry run pytest' which re-uses the active nox environment
 
 
-@session(python=PYTHON_VERSIONS)
+@session(python=PYTHON_VERSIONS, reuse_venv=True)
 @nox.parametrize("sphinx_needs", SPHINX_NEEDS_VERSIONS)
 @nox.parametrize("sphinx", SPHINX_VERSIONS)
 def tests(session, sphinx, sphinx_needs):
