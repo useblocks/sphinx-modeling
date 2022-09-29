@@ -10,7 +10,7 @@ SPHINX_NEEDS_VERSIONS = ["1.0.1", "1.0.2"]
 def run_tests(session, sphinx, sphinx_needs):
     session.install(".")
     session.run("pip", "install", f"sphinx=={sphinx}")
-    session.run("pip", "install", f"sphinx_needs=={sphinx_needs}")
+    session.run("pip", "install", f"sphinx-needs=={sphinx_needs}")
     session.run("echo", "FINAL PACKAGE LIST", external=True)
     session.run("pip", "freeze")
     session.run("make", "test", external=True)  # runs 'poetry run pytest' which re-uses the active nox environment
