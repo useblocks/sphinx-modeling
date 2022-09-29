@@ -19,11 +19,6 @@ Please see all `Unreleased Changes`_ for more information.
 0.1.1 - 2022-09-28
 ------------------
 
-Changed
-~~~~~~~
-
-- docs: split license from changelog (`PR #8 <https://github.com/useblocks/sphinx-modeling/pull/8>`_)
-
 Fixed
 ~~~~~
 
