@@ -11,7 +11,7 @@ jobs:
         # https://www.mail-archive.com/debian-bugs-dist@lists.debian.org/msg1829077.html
         python-version: ["3.7", "3.8", "3.9", "3.10"]
         sphinx-version: ["5.0.2"]
-        sphinx-needs-version: ["0.7.9", "1.0.1", "1.0.2"]
+        sphinx-needs-version: ["1.0.1", "1.0.2"]
         include:
           # Check only newest setups for win server
           - os: "windows-latest"
