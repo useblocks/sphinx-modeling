@@ -1,4 +1,4 @@
-**Complete documentation**: http://sphinx-modeling.readthedocs.io/en/latest/
+**Complete documentation**: https://sphinx-modeling.useblocks.com/
 
 Introduction
 ============

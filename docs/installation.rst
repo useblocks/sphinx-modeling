@@ -68,15 +68,5 @@ Install PlantUML
 
 .. code-block:: python
 
-  on_rtd = os.environ.get('READTHEDOCS') == 'True'
-  if on_rtd:
-      plantuml = 'java -Djava.awt.headless=true -jar /usr/share/plantuml/plantuml.jar'
-  else:
-      plantuml = 'java -jar %s' % os.path.join(os.path.dirname(__file__), "utils", "plantuml.jar"))
-
-      plantuml_output_format = 'png'
-
-The final configuration contains already a setup for building and deploying the documentation on
-`ReadTheDocs <https://readthedocs.org/>`_.
-
-ReadTheDocs provides ``plantuml.jar`` already on their system, so do not store it inside your source version control system.
+    plantuml = f'java -jar {os.path.join(os.path.dirname(__file__), "utils", "plantuml.jar")}'
+    plantuml_output_format = 'png'
