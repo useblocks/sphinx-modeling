@@ -21,6 +21,8 @@ jobs:
             sphinx-needs-version: "1.0.2"
     steps:
       - uses: actions/checkout@v3
+      - name: Install poetry
+        run: pipx install poetry
       - name: Set Up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
