@@ -20,25 +20,20 @@ jobs:
             sphinx-version: "5.0.2"
             sphinx-needs-version: "1.0.2"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set Up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install Nox Dependencies
-        run: |
-          python -m pip install poetry nox nox-poetry
-      - name: Install other dependencies
-        run: |
-          python -m pip install setuptools
+          cache: 'poetry'
+      - name: Install project
+        run: poetry install
       - name: Final package list
         run: |
           pip freeze
-
       - name: Run Tests on Windows
         run: nox --non-interactive --session "tests-${{ matrix.python-version }}(sphinx='${{ matrix.sphinx-version }}', sphinx_needs='${{ matrix.sphinx-needs-version }}')" -- --full-trace
         if: runner.os == 'Windows'
-
       - name: Run Tests on Linux
         run: nox --non-interactive --session "tests-${{ matrix.python-version }}(sphinx='${{ matrix.sphinx-version }}', sphinx_needs='${{ matrix.sphinx-needs-version }}')" -- --full-trace
         if: runner.os == 'Linux'
@@ -47,20 +42,12 @@ jobs:
     name: Lint
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set Up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.9"
-      - name: Install/Update  build dependencies
-        run: |
-          python -m pip install --upgrade setuptools
-          python -m pip install --upgrade pip
-      - name: Install Poetry
-        run: |
-          curl -sL https://install.python-poetry.org | python -
-      - name: Update Pip
-        run: poetry run pip install -U pip setuptools
-      - name: Install Dependencies
+          cache: 'poetry'
+      - name: Install project
         run: poetry install
       - uses: pre-commit/action@v3.0.0

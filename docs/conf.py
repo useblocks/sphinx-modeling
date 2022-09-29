@@ -44,7 +44,7 @@ html_theme_options = {
     "icon": {
         "repo": "fontawesome/brands/github-square",
     },
-    "site_url": "https://sphinx-modeling.readthedocs.io/",
+    "site_url": "https://sphinx-modeling.useblocks.com",
     "repo_url": "https://github.com/useblocks/sphinx-modeling",
     "repo_name": "Sphinx-Modeling",
     "repo_type": "github",

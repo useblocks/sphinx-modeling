@@ -9,7 +9,7 @@ authors = ["team useblocks <info@useblocks.com>"]
 license = "MIT"
 readme = "README.rst"
 repository = "http://github.com/useblocks/sphinx-modeling"
-documentation = "https://sphinx-modeling.readthedocs.io/en/latest/"
+documentation = "https://sphinx-modeling.useblocks.com/"
 classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
