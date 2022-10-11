@@ -24,6 +24,7 @@ needs_table_style = "TABLE"
 needs_types = [
     {"directive": "story", "title": "User Story", "prefix": "US_", "color": "#BFD8D2", "style": "node"},
     {"directive": "spec", "title": "Specification", "prefix": "SP_", "color": "#FEDCD2", "style": "node"},
+    {"directive": "sw-spec", "title": "SW Spec", "prefix": "SWS_", "color": "#DCB239", "style": "node"},
     {"directive": "impl", "title": "Implementation", "prefix": "IM_", "color": "#DF744A", "style": "node"},
     {"directive": "test", "title": "Test Case", "prefix": "TC_", "color": "#DCB239", "style": "node"},
 ]
@@ -78,6 +79,11 @@ class Spec(BaseModelNeeds, extra=Extra.forbid):
     links: conlist(Story, min_items=1, max_items=1)
 
 
+class SwSpec(BaseModelNeeds, extra=Extra.forbid):
+    id: str
+    type: Literal["sw-spec"]
+
+
 class Impl(BaseModelNeeds, extra=Extra.forbid):
     id: id_constraints[__qualname__]
     type: Literal["impl"]
@@ -94,6 +100,7 @@ class Test(BaseModelNeeds, extra=Extra.forbid):
 modeling_models = [
     Story,
     Spec,
+    SwSpec,
     Impl,
     Test,
 ]
