@@ -137,22 +137,43 @@ class BaseModelNeeds(BaseModel):
         return values
 
 
+def camel_case_split(identifier: str) -> List[str]:
+    """
+    Split a CamelCase string into separate words.
+
+    Credits to https://stackoverflow.com/a/37697078/2285820.
+    """
+    words = re.sub("([A-Z][a-z]+)", r" \1", re.sub("([A-Z]+)", r" \1", identifier)).split()
+    return words
+
+
 def str_to_cls_name(input_text: str) -> str:
     """
     Convert any string into a valid, PEP8 compliant Python class name.
 
-    Allowed are all of a-z, A-Z, 0-9, _ without a leading digit.
-    All characters that don't match are removed.
+    Identifiers already in CamelCase style are preserved. Examples:
+    - impl > Impl
+    - Swspec > Swspec
+    - SwSpec > SwSpec
+    - sw-spec > SwSpec
+    - sw_spec > SwSpec
+    - sw_Spec > SwSpec
+    - sw1_Spec > Sw1Spec
+    - 1sw_spec > SwSpec
+    - IPAddress > IpAddress
+    - SPEC > Spec
     """
     replace_special = re.sub(r"\W|^\d+|_", " ", input_text)
-    camel_case = replace_special.title().replace(" ", "")
-    if not camel_case.isidentifier():
+    camel_case_split_words = camel_case_split(replace_special)
+    title_words = [word.title() for word in camel_case_split_words]
+    joined = "".join(title_words)
+    if not joined.isidentifier():
         raise ValueError(
-            f"The need type '{input_text}' is converted to the modeling class name '{camel_case}' which is not a valid"
+            f"The need type '{input_text}' is converted to the modeling class name '{joined}' which is not a valid"
             " identifier."
         )
-    log.debug(f"Converted need type '{input_text}' to model class name '{camel_case}'")
-    return camel_case
+    log.debug(f"Converted need type '{input_text}' to model class name '{joined}'")
+    return joined
 
 
 def check_model(env: BuildEnvironment, msg_path: str) -> None:

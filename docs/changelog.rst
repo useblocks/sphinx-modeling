@@ -19,7 +19,8 @@ Please see all `Unreleased Changes`_ for more information.
 Fixed
 ~~~~~
 
-- handle need types with non-identifier characters (`PR #10 <https://github.com/useblocks/sphinx-modeling/pull/10>`_)
+- handle need types with non-identifier characters
+  (`Issue #10 <https://github.com/useblocks/sphinx-modeling/issues/16>`_, `PR #19 <https://github.com/useblocks/sphinx-modeling/pull/19>`_)
 
 0.1.1 - 2022-09-28
 ------------------
