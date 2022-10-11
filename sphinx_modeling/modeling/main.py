@@ -8,6 +8,7 @@ They are unknown to mypy as they are dynamically created.
 from contextlib import suppress
 import os
 import pickle
+import re
 from typing import Any, Dict, List
 
 from pydantic import BaseModel, ValidationError, root_validator
@@ -136,6 +137,15 @@ class BaseModelNeeds(BaseModel):
         return values
 
 
+def str_to_identifer(input_text: str) -> str:
+    """
+    Convert any string into a valid Python identifier.
+
+    Allowed are all of a-z, A-Z, 0-9, _ without a leading digit.
+    """
+    return re.sub(r"\W|^(?=\d)", "", input_text)
+
+
 def check_model(env: BuildEnvironment, msg_path: str) -> None:
     """
     Check all needs against a user defined pydantic model.
@@ -182,7 +192,7 @@ def check_model(env: BuildEnvironment, msg_path: str) -> None:
         last_idx_pending_need_ids = len(PENDING_NEED_IDS) - 1
         try:
             # expected model name is the need type with first letter capitalized (this is how Python class are named)
-            expected_pydantic_model_name = need["type"].title()
+            expected_pydantic_model_name = str_to_identifer(need["type"]).title()
             if expected_pydantic_model_name in model_name_2_model:
                 model = model_name_2_model[expected_pydantic_model_name]
                 # get all fields that exist as per the model

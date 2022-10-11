@@ -19,6 +19,9 @@ TEST DOCUMENT MODELING
    :importance: HIGH
    :active: False
 
+.. sw-spec:: SW Spec 1
+   :id: SWS_001
+
 .. impl:: Impl impl1
    :id: IM_001
    :impact: True
