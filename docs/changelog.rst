@@ -16,6 +16,11 @@ Unreleased
 
 Please see all `Unreleased Changes`_ for more information.
 
+Fixed
+~~~~~
+
+- handle need types with non-identifier characters (`PR #10 <https://github.com/useblocks/sphinx-modeling/pull/10>`_)
+
 0.1.1 - 2022-09-28
 ------------------
 

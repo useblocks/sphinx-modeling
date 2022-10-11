@@ -137,13 +137,22 @@ class BaseModelNeeds(BaseModel):
         return values
 
 
-def str_to_identifer(input_text: str) -> str:
+def str_to_cls_name(input_text: str) -> str:
     """
-    Convert any string into a valid Python identifier.
+    Convert any string into a valid, PEP8 compliant Python class name.
 
     Allowed are all of a-z, A-Z, 0-9, _ without a leading digit.
+    All characters that don't match are removed.
     """
-    return re.sub(r"\W|^(?=\d)", "", input_text)
+    replace_special = re.sub(r"\W|^\d+|_", " ", input_text)
+    camel_case = replace_special.title().replace(" ", "")
+    if not camel_case.isidentifier():
+        raise ValueError(
+            f"The need type '{input_text}' is converted to the modeling class name '{camel_case}' which is not a valid"
+            " identifier."
+        )
+    log.debug(f"Converted need type '{input_text}' to model class name '{camel_case}'")
+    return camel_case
 
 
 def check_model(env: BuildEnvironment, msg_path: str) -> None:
@@ -192,7 +201,7 @@ def check_model(env: BuildEnvironment, msg_path: str) -> None:
         last_idx_pending_need_ids = len(PENDING_NEED_IDS) - 1
         try:
             # expected model name is the need type with first letter capitalized (this is how Python class are named)
-            expected_pydantic_model_name = str_to_identifer(need["type"]).title()
+            expected_pydantic_model_name = str_to_cls_name(need["type"])
             if expected_pydantic_model_name in model_name_2_model:
                 model = model_name_2_model[expected_pydantic_model_name]
                 # get all fields that exist as per the model

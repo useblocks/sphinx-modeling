@@ -7,9 +7,17 @@ Model names
 -----------
 
 The validation logic passes each need object to Pydantic. The need type is used to look up the correct model in
-the configuration list :ref:`modeling_models`.
-Therefore each user provided Pydantic class name must conform to the pattern ``need['type'].title()``.
-A need type called ``spec`` results in a class name ``Spec``. A type ``CustomSpec`` would result in ``Customspec``.
+the configuration list :ref:`modeling_models`. sphinx-modeling uses an implicit logic to derive the modeling class
+from the need type. Some examples for how need types are converted to class names::
+    
+    test -> Test
+    SwReq -> Swreq
+    sw-req -> Swreq
+    1sw-req -> Swreq
+    sw_req -> Sw_Req
+
+The logic removes all non-identifier symbols (allowed are a-zA-Z) and leading digits, then runs
+`.title() <https://docs.python.org/3/library/stdtypes.html#str.title>`_ on the string.
 
 Base class
 ----------
