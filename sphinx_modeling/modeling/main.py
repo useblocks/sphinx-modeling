@@ -113,8 +113,11 @@ def check_model(env: BuildEnvironment, msg_path: str) -> None:
         back_types.add(f"{link_type}_back")
     all_link_types.update(back_types)
 
-    for need in needs_copy.values():
-        _resolve_links(need, needs_copy, all_link_types)
+    if env.config.modeling_resolve_links:
+        # user may decide to validate need IDs directly or resolve them in own (root) validators;
+        # normally it is more helpful to see resolved needs so far fields can be used for validation
+        for need in needs_copy.values():
+            _resolve_links(need, needs_copy, all_link_types)
 
     pydantic_models = env.config.modeling_models
 

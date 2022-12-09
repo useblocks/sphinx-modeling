@@ -135,6 +135,7 @@ modeling_remove_fields = MODELING_REMOVE_FIELDS + [
     "doctype",
 ]
 modeling_remove_backlinks = True
+modeling_resolve_links = True
 
 plantuml = f"java -jar {os.path.join(os.path.dirname(__file__), '..', 'utils', 'plantuml.jar')}"
 plantuml_output_format = "svg"

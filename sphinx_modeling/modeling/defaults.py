@@ -6,7 +6,9 @@ Can be overriden in conf.py.
 
 
 MODELING_REMOVE_FIELDS = [
+    "arch",
     "docname",
+    "doctype",
     "external_css",
     "hide",
     "is_modified",
@@ -21,3 +23,6 @@ MODELING_REMOVE_FIELDS = [
 
 MODELING_REMOVE_BACKLINKS = True
 """Flag to remove back-referencing links (e.g. blocks -> blocks_back) before validation."""
+
+MODELING_RESOLVE_LINKS = True
+"""Flag to replace linked need IDs with the linked need dictionary itself."""

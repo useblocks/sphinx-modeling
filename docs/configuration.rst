@@ -82,12 +82,14 @@ Example:
    from sphinx_modeling.modeling.defaults import MODELING_REMOVE_FIELDS
 
    modeling_remove_fields = MODELING_REMOVE_FIELDS + [
-    "content",
-    "full_title",
-    "is_external",
-    "is_need",
-    "is_part",
+      "content",
+      "full_title",
+      "is_external",
+      "is_need",
+      "is_part",
    ]
+
+.. _modeling_remove_backlinks:
 
 modeling_remove_backlinks
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -97,3 +99,32 @@ This is an addition to :ref:`modeling_remove_fields` so the backlinks don't have
 Commonly they should also not be part of the validation models.
 
 Default: ``True``
+
+.. _modeling_resolve_links:
+
+modeling_resolve_links
+~~~~~~~~~~~~~~~~~~~~~~
+
+Flag to replace linked need IDs with the linked need dictionary itself.
+
+Sphinx-Needs uses list of strings to represent outgoing and incoming need links.
+Each string is a need ID which uniquely identifies the linked need.
+To validate outgoing or incoming need links, Pydantic models can either validate the need IDs or
+the target need dictionary - which also includes the need ID.
+Commonly it is preferrable to validate various linked need fields such as:
+
+- must be of type 'story'
+- must be in status 'in_progress' or 'done'
+
+Setting this configuration parameter to ``True`` will replace all need ID strings with the corresponding
+target need dictionary.
+
+.. admonition:: Circular loops
+   :class: warning
+
+   Keep in mind Pydantic does **not** support circular references. Replacing need IDs with the target need
+   dictionary might lead to circular references which is perfectly fine in Python but not for Pydantic.
+   This happens if e.g. a ``test`` references a ``spec`` which references a ``story`` which then links
+   to the same ``test`` again. To avoid this create dedicated models with a reduced field set for linked
+   need validation. See the :ref:`modeling_guidelines` for more information.
+
