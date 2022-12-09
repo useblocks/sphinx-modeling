@@ -42,7 +42,7 @@ html_logo = "./_static/sphinx-modeling-logo-white.png"
 # material theme options (see theme.conf for more information)
 html_theme_options = {
     "icon": {
-        "repo": "fontawesome/brands/github-square",
+        "repo": "fontawesome/brands/github",
     },
     "site_url": "https://sphinx-modeling.useblocks.com",
     "repo_url": "https://github.com/useblocks/sphinx-modeling",

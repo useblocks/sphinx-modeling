@@ -1,6 +1,6 @@
 """Sphinx configuration file."""
 import os
-from typing import Optional
+from typing import Optional, Union
 
 
 try:
@@ -8,7 +8,7 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
-from pydantic import Extra, conlist, constr, validator
+from pydantic import BaseModel, Extra, conlist, constr, validator
 
 from sphinx_modeling.modeling.defaults import MODELING_REMOVE_FIELDS
 from sphinx_modeling.modeling.main import BaseModelNeeds
@@ -58,6 +58,21 @@ for need_type in needs_types:
 needs_bool = Literal["True", "False"]
 
 
+def empty_means_none(v):
+    """Set empty string to None, so pydantic identifies this correctly for Optional type and default values."""
+    if v == "":
+        return None
+    return v
+
+
+class LinkedStory(BaseModel):
+    type: Literal["story"]
+
+
+class LinkedImpl(BaseModel):
+    type: Literal["impl"]
+
+
 # usage of qualname, see https://stackoverflow.com/a/62943181
 class Story(BaseModelNeeds, extra=Extra.forbid):
     id: id_constraints[__qualname__]
@@ -76,7 +91,8 @@ class Spec(BaseModelNeeds, extra=Extra.forbid):
     type: Literal["spec"]
     importance: Literal["HIGH"]
     active: needs_bool
-    links: conlist(Story, min_items=1, max_items=1)
+    links: conlist(LinkedStory, min_items=1, max_items=1)
+    links: Union[conlist(LinkedStory, min_items=1, max_items=1), conlist(LinkedImpl, min_items=2)]
 
 
 class SwSpec(BaseModelNeeds, extra=Extra.forbid):
@@ -94,7 +110,9 @@ class Test(BaseModelNeeds, extra=Extra.forbid):
     id: str
     type: Literal["test"]
     impact: Optional[Literal["True", "False"]]
-    parent_need: Impl
+    parent_need: LinkedImpl
+
+    _empty_impact = validator("impact", allow_reuse=True, pre=True)(empty_means_none)
 
 
 modeling_models = [
@@ -118,6 +136,7 @@ modeling_remove_fields = MODELING_REMOVE_FIELDS + [
     "doctype",
 ]
 modeling_remove_backlinks = True
+modeling_resolve_links = True
 
 plantuml = f"java -jar {os.path.join(os.path.dirname(__file__), '..', 'utils', 'plantuml.jar')}"
 plantuml_output_format = "svg"

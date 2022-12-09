@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Literal, Optional, Union
+from typing import Any, Dict, List, Literal, Optional, Union, get_origin
 
-from pydantic import BaseModel, Extra, ValidationError, constr, create_model, root_validator, validator
+from pydantic import BaseModel, Extra, ValidationError, conlist, constr, create_model, root_validator, validator
 from pydantic.fields import Field, ModelField
 
 
@@ -13,8 +13,13 @@ needs = {
         "type": "story",
         "status": "open",
         "active": "True",
-        "specs": ["SPEC_1"],
-        "implspecs": ["IMPL_1"],
+        "spec": ["SPEC_1"],
+        "impl_spec": [],
+        "optional_spec": [],
+        "list_spec": [],
+        "list_impl_spec": ["IMPL_1", "SPEC_1", "TEST_1"],
+        "conlist_spec": [],
+        "conlist_impl_spec": [],
     },
     "SPEC_1": {
         "id": "SPEC_1",
@@ -29,10 +34,31 @@ needs = {
         "id": "IMPL_1",
         "type": "impl",
     },
+    "IMPL_2": {
+        "id": "IMPL_2",
+        "type": "impl",
+    },
+    "TEST_1": {
+        "id": "TEST_1",
+        "type": "test",
+    },
 }
 
 
-link_types = ["specs", "implspecs", "opt_needs", "needs", "need", "opt_need", "parent_need"]
+link_types = [
+    "spec",
+    "impl_spec",
+    "optional_spec",
+    "list_spec",
+    "list_impl_spec",
+    "conlist_spec",
+    "conlist_impl_spec",
+    "opt_needs",
+    "needs",
+    "need",
+    "opt_need",
+    "parent_need",
+]
 
 # user provided models
 needs_bool = Literal["True", "False"]
@@ -43,12 +69,33 @@ def validator_reuse(cls, v):
     return v
 
 
+class LinkedSpec(BaseModel):
+    type: Literal["spec"]
+
+
+class LinkedImpl(BaseModel):
+    type: Literal["impl"]
+
+
+class LinkedStory(BaseModel):
+    type: Literal["story"]
+
+
+class LinkedTest(BaseModel):
+    type: Literal["test"]
+
+
 class Story(BaseModel, extra=Extra.forbid):
     id: constr(regex=r"^STORY_[a-zA-Z0-9_]{1,}$")
     status: Literal["open", "done"]
-    specs: Spec | None
-    specs: list[Spec]
-    implspecs: list[Spec | Impl] | None
+    type: Literal["story"]
+    spec: conlist(LinkedSpec, min_items=1, max_items=1)
+    impl_spec: conlist(LinkedImpl | LinkedSpec, min_items=1, max_items=1)
+    optional_spec: conlist(LinkedSpec, min_items=0, max_items=1)
+    list_spec: List[LinkedSpec]
+    list_impl_spec: List[LinkedImpl | LinkedSpec]
+    conlist_spec: conlist(LinkedSpec, min_items=1, max_items=4)
+    conlist_impl_spec: conlist(LinkedImpl | LinkedSpec, min_items=1, max_items=4)
     active: needs_bool
 
     @root_validator(pre=True)
@@ -71,18 +118,24 @@ class Story(BaseModel, extra=Extra.forbid):
 class Spec(BaseModel, extra=Extra.forbid):
     id: str
     importance: Literal["HIGH"]
-    opt_needs: list[Story] | None
-    needs: list[Story]
-    need: Story
-    opt_need: Story | None
+    opt_needs: List[LinkedStory] | None
+    needs: List[LinkedStory]
+    need: List[LinkedStory]
+    opt_need: List[LinkedStory]
 
 
 class Impl(BaseModel, extra=Extra.forbid):
     id: str
 
 
+class Test(BaseModel, extra=Extra.forbid):
+    id: str
+
+
 Story.update_forward_refs()
 Spec.update_forward_refs()
+
+DynamicFoobarModel = create_model("DynamicFoobarModel", foo=(Literal["story"], ...), bar=123)
 
 
 def model_remove_all_but_type(model):
@@ -99,7 +152,7 @@ def model_remove_all_but_type(model):
     return new_model
 
 
-models = [Story, Spec]
+models = [Story, Spec, Impl, Test]
 model_name_2_model = {model.__name__: model for model in models}
 model_name_2_model_only_type = {key: model_remove_all_but_type(value) for key, value in model_name_2_model.items()}
 
@@ -197,29 +250,77 @@ def add_root_validator(model):
     pass
 
 
-model_orig_fields = {}
+# model_orig_fields = {}
+
+# # map need type to class
+# map_type_2_class = {}
+# for need in needs.values():
+#     if need["type"] not in map_type_2_class:
+#         class_name = need["type"].title()
+#         if class_name not in model_name_2_model:
+#             raise ValueError(f"Cannot find class {class_name} for need type {need['type']}")
+#         map_type_2_class[need["type"]] = need["type"].title()
+# map_class_2_type = {class_name: need_type for need_type, class_name in map_type_2_class.items()}
+# map_class_2_linked_model = {}
+# for class_name, type_name in map_class_2_type.items():
+#     linked_model = create_model(
+#         f"{class_name}Link",
+#         type=(Literal[type_name + "3"], ...),
+#     )
+#     map_class_2_linked_model[class_name] = linked_model
+# for model_name, model in model_name_2_model.items():
+#     for field_name, field in model.__fields__.items():
+#         if field_name in link_types:
+#             if field.type_.__class__.__name__ == "UnionType":
+#                 pass
+#             elif field.type_.__name__ in map_class_2_linked_model:
+#                 orig_field_name = field.type_.__name__
+#                 field.type_ = map_class_2_linked_model[orig_field_name]
+#                 # field.validators = [map_class_2_linked_model[orig_field_name].validate]
+#             if str(field.outer_type_).startswith("ForwardRef("):
+#                 outer_type = str(field.outer_type_)[12:-2]
+#                 if outer_type in map_class_2_linked_model:
+#                     field.outer_type_ = map_class_2_linked_model[outer_type]
+#             else:
+#                 if field.outer_type_.__name__ in map_class_2_linked_model:
+#                     field.outer_type_ = map_class_2_linked_model[field.outer_type_.__name__]
+# recurse into subfields
+# curr_field = field
+# while curr_field.sub_fields:
+#     for field in curr_field.sub_fields:
+#         pass
+
+for need in needs.values():
+    for field, link_targets in need.items():
+        if field in link_types:
+            new_values = []
+            for link_target in link_targets:
+                target_need = needs[link_target]
+                new_values.append(target_need)
+            need[field] = new_values
 
 for need in needs.values():
     model = model_name_2_model[need["type"].title()]
 
-    reduced_need = remove_fields_need(need)
+    # reduced_need = remove_fields_need(need)
 
-    reduced_model = model_remove_links(model)
+    # reduced_model = model_remove_links(model)
     # modified_links_model = model_modify_links(model)
-    reduced_model_with_env = model_add_env(reduced_model)
+    # reduced_model_with_env = model_add_env(reduced_model)
     try:
+        model(**need, all_needs=needs)
         # reduced_model(**reduced_need, all_needs=needs)
-        reduced_model_with_env(**reduced_need, all_needs=needs, env={})
+        # reduced_model_with_env(**reduced_need, all_needs=needs, env={})
     except ValidationError as exc:
         print(exc)
 
-    model_duplicate = copy_model(model)
-    add_root_validator(model_duplicate)
-    try:
-        # reduced_model(**reduced_need, all_needs=needs)
-        model_duplicate(**need, all_needs=needs, env={})
-    except ValidationError as exc:
-        print(exc)
+    # model_duplicate = copy_model(model)
+    # add_root_validator(model_duplicate)
+    # try:
+    #     # reduced_model(**reduced_need, all_needs=needs)
+    #     model_duplicate(**need, all_needs=needs, env={})
+    # except ValidationError as exc:
+    #     print(exc)
 
     # link_validated_model = add_links_validator(model)
     # try:

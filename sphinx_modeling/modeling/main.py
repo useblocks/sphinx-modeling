@@ -6,10 +6,11 @@ They are unknown to mypy as they are dynamically created.
 """
 
 from contextlib import suppress
+import copy
 import os
 import pickle
 import re
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Set
 
 from pydantic import BaseModel, ValidationError, root_validator
 from pydantic.fields import ModelField
@@ -19,8 +20,6 @@ from sphinx_modeling.logging import get_logger
 
 
 PYDANTIC_INSTANCES: Dict[str, Any] = {}  # fully created Pydantic instances
-PENDING_NEED_IDS: List[str] = []  # Pydantic startet building but not ready (resolving links)
-# CICULAR_LOOP_LINKS: List[Tuple[str, str, str]] = []  # Tuple: need id, link field, link target
 log = get_logger(__name__)
 
 
@@ -29,7 +28,7 @@ class BaseModelNeeds(BaseModel):
     Custom Base class to support custom validation against all needs.
 
     This approach https://github.com/pydantic/pydantic/issues/1170#issuecomment-575233689
-    to make all needs available to validators.
+    is used to make all needs available to validators.
     Other approaches are Python ContextVars which also works. ContextVars however are hard to
     expose to the end users that run custom validators.
     """
@@ -46,94 +45,6 @@ class BaseModelNeeds(BaseModel):
         """
         del values["all_needs"]
         del values["env"]
-        return values
-
-    @root_validator(pre=True)
-    def instantiate_links(cls, values: Dict[str, Any]) -> Dict[str, Any]:  # noqa: N805
-        """
-        Resolve sphinx-needs link targets.
-
-        The function is called by pydantic when
-        1. looping over all needs in check_model
-        2. when a link targets gets resolved and instantiated in this very function
-        """
-        try:
-            # str conversion should not go wrong
-            need_id = str(values["id"])
-        except KeyError:
-            log.warning("Error instantiating links: need has no id")
-            raise
-        if need_id in PYDANTIC_INSTANCES:
-            # do nothing as this object is already successfully validated
-            # it can happen when a later need links to an already instantiated need
-            return values
-        if need_id not in PENDING_NEED_IDS:
-            # remember the id to detect circular references (recursion depth limitation)
-            PENDING_NEED_IDS.append(need_id)
-
-        pydantic_models = values["env"].config.modeling_models
-        model_name_2_model = {model.__name__: model for model in pydantic_models}
-        sphinx_needs_list_link_types = [link["option"] for link in values["env"].config.needs_extra_links]
-        sphinx_needs_list_link_types.append("parent_needs")
-        sphinx_needs_list_link_types_back = [f"{link}_back" for link in sphinx_needs_list_link_types]
-        sphinx_needs_string_link_types = ["parent_need"]
-
-        for link_type, link_value in values.items():
-            if link_type not in sphinx_needs_list_link_types + sphinx_needs_string_link_types:
-                continue
-            resolved_needs = []
-            if link_type in sphinx_needs_string_link_types:
-                assert isinstance(link_value, str)
-                links = [link_value]
-            else:
-                assert isinstance(link_value, list)
-                links = link_value
-            for target in links:
-                if target in PENDING_NEED_IDS:
-                    # circular link loop detected
-                    log.warning(f"{need_id}: unsupported circular loop detected for link '{link_type}: {target}'")
-                    log.warning("Ignoring target for validation")
-                    continue
-                if target in PYDANTIC_INSTANCES:
-                    instance = PYDANTIC_INSTANCES[target]
-                else:
-                    try:
-                        resolved_need = values["all_needs"][target]
-                    except KeyError:
-                        log.warning(f"{need_id}: cannot resolve link '{link_type}: {target}'")
-                        log.warning("Ignoring target for validation")
-                        continue
-                    resolved_need_model = model_name_2_model[resolved_need["type"].title()]
-                    resolved_need_model_fields = [
-                        name
-                        for name, field in resolved_need_model.__fields__.items()
-                        if isinstance(field, ModelField) and name not in ["all_needs", "env"]
-                    ]
-                    need_relevant_fields = _remove_unrequested_fields(
-                        resolved_need,
-                        resolved_need_model_fields,
-                        values["env"].config.modeling_remove_fields,
-                        values["env"].config.modeling_remove_backlinks,
-                        sphinx_needs_list_link_types_back,
-                    )
-                    instance = need_relevant_fields
-                    instance.update(
-                        {
-                            "all_needs": values["all_needs"],
-                            "env": values["env"],
-                        }
-                    )
-                    # instance = resolved_need_model(
-                    #     **need_relevant_fields, all_needs=values["all_needs"], env=values["env"]
-                    # )  # run pydantic
-                    # PYDANTIC_INSTANCES[resolved_need["id"]] = instance
-                resolved_needs.append(instance)
-
-            if link_type in sphinx_needs_string_link_types:
-                if resolved_needs:
-                    values[link_type] = resolved_needs[0]
-            else:
-                values[link_type] = resolved_needs
         return values
 
 
@@ -191,7 +102,23 @@ def check_model(env: BuildEnvironment, msg_path: str) -> None:
         os.remove(msg_path)
 
     needs = env.needs_all_needs  # type: ignore
-    # all_needs.set(needs)
+    # deep copy needs dictionary as it is modified
+    needs_copy = copy.deepcopy(needs)
+
+    # resolve all need links
+    all_link_types = {"links"}
+    all_link_types.update({link_config["option"] for link_config in env.config.needs_extra_links})
+    back_types = set()
+    for link_type in all_link_types:
+        back_types.add(f"{link_type}_back")
+    all_link_types.update(back_types)
+
+    if env.config.modeling_resolve_links:
+        # user may decide to validate need IDs directly or resolve them in own (root) validators;
+        # normally it is more helpful to see resolved needs so far fields can be used for validation
+        for need in needs_copy.values():
+            _resolve_links(need, needs_copy, all_link_types)
+
     pydantic_models = env.config.modeling_models
 
     if not pydantic_models:
@@ -208,18 +135,12 @@ def check_model(env: BuildEnvironment, msg_path: str) -> None:
         # invert the order of root validators to have
         # context variables available in user defined root validators
         model.__post_root_validators__.reverse()
-        # # later needed for circular model handling
-        # model.update_forward_refs()
 
     logged_types_without_model = set()  # helper to avoid duplicate log output
     all_successful = True
     all_messages: List[str] = []  # return variable
-    global PENDING_NEED_IDS
-    for need in needs.values():
-        if need["id"] in PYDANTIC_INSTANCES:
-            # this id was handled during links resolution
-            continue
-        last_idx_pending_need_ids = len(PENDING_NEED_IDS) - 1
+
+    for need in needs_copy.values():
         try:
             # expected model name is the need type with first letter capitalized (this is how Python class are named)
             expected_pydantic_model_name = str_to_cls_name(need["type"])
@@ -235,15 +156,13 @@ def check_model(env: BuildEnvironment, msg_path: str) -> None:
                     sphinx_needs_link_types_back,
                 )
                 instance = model(**need_relevant_fields, all_needs=needs, env=env)  # run pydantic
-                PENDING_NEED_IDS.remove(need["id"])
                 PYDANTIC_INSTANCES[need["id"]] = instance
             else:
                 if need["type"] not in logged_types_without_model:
+                    all_successful = False
                     log.warning(f"Model validation: no model defined for need type '{need['type']}'")
                     logged_types_without_model.add(need["type"])
         except ValidationError as exc:
-            # remove all pending IDs that were about to be instantiated
-            PENDING_NEED_IDS = PENDING_NEED_IDS[: last_idx_pending_need_ids + 1]
             all_successful = False
             all_messages.append(f"Model validation: failed for need {need['id']}")
             all_messages.append(str(exc))
@@ -264,6 +183,7 @@ def check_model(env: BuildEnvironment, msg_path: str) -> None:
             all_successful = False
             all_messages.append(f"Model validation: failed for need {need['id']}")
             all_messages.append(repr(exc))
+            # print(str(exc))
     if all_successful:
         log.info("Validation was successful!")
 
@@ -272,27 +192,12 @@ def check_model(env: BuildEnvironment, msg_path: str) -> None:
 
     if all_messages:
         for msg in all_messages:
-            log.warning(msg)
+            log.info(msg)
         dir_name = os.path.dirname(os.path.abspath(msg_path))
         if not os.path.exists(dir_name):
             os.makedirs(dir_name)
         with open(msg_path, "wb") as fp:
             pickle.dump(all_messages, fp)
-
-
-def _value_allowed(value: Any) -> bool:
-    """Check whether a given need field is allowed for validation."""
-    if value is None:
-        return False
-    if isinstance(value, bool):
-        # useful for flags such as is_need
-        return True
-    elif isinstance(value, (str, list)):
-        # do not return empty strings or lists - they are never user defined as RST does not support empty options
-        return bool(value)
-    else:
-        # don't return all other types (such as class instances like content_node)
-        return False
 
 
 def _remove_unrequested_fields(
@@ -303,11 +208,7 @@ def _remove_unrequested_fields(
     sphinx_needs_link_types_back: List[str],
 ) -> Any:
     """
-    Remove need object fields that
-
-    1. are of wrong type (allowed ar str and List[str] and bool)
-    1. are empty (those are not relevant anyway as RST does not support empty options)
-    2. are in contained in remove_fields (even if not empty like lineno) but not in model_fields
+    Remove unneeded object fields.
 
     :param model_fields: list of fields that are contained in the user defined model
     :param remove_fields: list of fields to remove from the dict
@@ -316,14 +217,39 @@ def _remove_unrequested_fields(
     """
     output_dict = {}
     for key, value in need.items():
-        if not _value_allowed(value):
-            # type check and empty check
-            continue
-        if key not in model_fields:
-            if key in remove_fields:
-                continue
-            if isinstance(value, list) and remove_backlinks and key in sphinx_needs_link_types_back:
-                # checking for list type is a safety measure
-                continue
-        output_dict[key] = value
+        if key in remove_fields:
+            continue  # static user configuration
+        if value is None:
+            continue  # not considered a useful field for modeling (e.g. style)
+        keep = False
+        if key in model_fields:
+            keep = True
+        if key == "parent_need":
+            keep = True  # special sphinx-needs field that holds the nesting parent
+        if not keep:
+            if isinstance(value, bool):
+                # useful for flags such as is_need
+                keep = True
+            if isinstance(value, (str, list)):
+                # str:  do not return empty values as they cannot be set in RST
+                # list: need links, those can be empty by setting in RST or not giving them, cannot distinguish here;
+                #       empty lists should be removed unless they are part of model_fields
+                keep = bool(value)
+            if remove_backlinks and key in sphinx_needs_link_types_back:
+                keep = False
+        if keep:
+            output_dict[key] = value
     return output_dict
+
+
+def _resolve_links(need: Dict[str, Any], needs: Dict[str, Dict[str, Any]], all_link_types: Set[str]) -> None:
+    """Resolve link fields and backlinks for a given need."""
+    for field, link_targets in need.items():
+        if field in all_link_types and link_targets:
+            resolved_link_targets = []
+            for link_target in link_targets:
+                if link_target in needs:
+                    resolved_link_targets.append(needs[link_target])
+            need[field] = resolved_link_targets
+    if need["parent_need"] and need["parent_need"] in needs:
+        need["parent_need"] = needs[need["parent_need"]]

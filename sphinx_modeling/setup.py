@@ -11,7 +11,7 @@ from sphinx.environment import BuildEnvironment
 from sphinx_needs.api import add_dynamic_function, add_extra_option, add_need_type
 
 from sphinx_modeling.logging import get_logger
-from sphinx_modeling.modeling.defaults import MODELING_REMOVE_BACKLINKS, MODELING_REMOVE_FIELDS
+from sphinx_modeling.modeling.defaults import MODELING_REMOVE_BACKLINKS, MODELING_REMOVE_FIELDS, MODELING_RESOLVE_LINKS
 from sphinx_modeling.modeling.main import check_model
 
 
@@ -36,6 +36,12 @@ def setup(app: Sphinx) -> Dict[str, Any]:
     app.add_config_value(
         "modeling_remove_backlinks",
         MODELING_REMOVE_BACKLINKS,
+        "html",
+        types=[bool],
+    )
+    app.add_config_value(
+        "modeling_resolve_links",
+        MODELING_RESOLVE_LINKS,
         "html",
         types=[bool],
     )

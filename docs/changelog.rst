@@ -16,6 +16,13 @@ Unreleased
 
 Please see all `Unreleased Changes`_ for more information.
 
+Added
+~~~~~
+
+- Circular link loops
+  (`Issue #22 <https://github.com/useblocks/sphinx-modeling/issues/22>`_,
+  `PR #25 <https://github.com/useblocks/sphinx-modeling/pull/25>`_)
+
 Fixed
 ~~~~~
 
