@@ -183,7 +183,6 @@ def check_model(env: BuildEnvironment, msg_path: str) -> None:
             all_successful = False
             all_messages.append(f"Model validation: failed for need {need['id']}")
             all_messages.append(repr(exc))
-            # print(str(exc))
     if all_successful:
         log.info("Validation was successful!")
 
@@ -192,7 +191,7 @@ def check_model(env: BuildEnvironment, msg_path: str) -> None:
 
     if all_messages:
         for msg in all_messages:
-            log.info(msg)
+            log.warning(msg)
         dir_name = os.path.dirname(os.path.abspath(msg_path))
         if not os.path.exists(dir_name):
             os.makedirs(dir_name)
