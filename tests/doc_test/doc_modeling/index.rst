@@ -15,7 +15,7 @@ TEST DOCUMENT MODELING
 
 .. spec:: Test spec1
    :id: SP_001
-   :links: US_001
+   :links: IM_001, IM_002
    :importance: HIGH
    :active: False
 
@@ -30,6 +30,10 @@ TEST DOCUMENT MODELING
       :id: TC_001
 
       Test case content
+
+.. impl:: Impl impl2
+   :id: IM_002
+   :impact: True
 
 .. toctree::
    :hidden:

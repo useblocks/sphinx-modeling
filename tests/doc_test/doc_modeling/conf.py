@@ -1,6 +1,6 @@
 """Sphinx configuration file."""
 import os
-from typing import Optional
+from typing import Optional, Union
 
 
 try:
@@ -92,6 +92,7 @@ class Spec(BaseModelNeeds, extra=Extra.forbid):
     importance: Literal["HIGH"]
     active: needs_bool
     links: conlist(LinkedStory, min_items=1, max_items=1)
+    links: Union[conlist(LinkedStory, min_items=1, max_items=1), conlist(LinkedImpl, min_items=2)]
 
 
 class SwSpec(BaseModelNeeds, extra=Extra.forbid):
