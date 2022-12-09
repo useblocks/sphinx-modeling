@@ -23,6 +23,13 @@ Added
   (`Issue #22 <https://github.com/useblocks/sphinx-modeling/issues/22>`_,
   `PR #25 <https://github.com/useblocks/sphinx-modeling/pull/25>`_)
 
+Changed
+~~~~~~~
+
+- Add new ignore fields ``doctype``, ``arch``
+  (`Issue #23 <https://github.com/useblocks/sphinx-modeling/issues/23>`_,
+  `PR #25 <https://github.com/useblocks/sphinx-modeling/pull/25>`_)
+
 Fixed
 ~~~~~
 
