@@ -147,7 +147,8 @@ def check_model(env: BuildEnvironment, msg_path: str) -> None:
 
     if all_messages:
         for msg in all_messages:
-            log.warning(msg)
+            log.info(msg, color="red")
+        log.warning("Validation errors appeared!")
         dir_name = os.path.dirname(os.path.abspath(msg_path))
         if not os.path.exists(dir_name):
             os.makedirs(dir_name)
