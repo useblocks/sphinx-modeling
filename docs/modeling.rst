@@ -3,31 +3,37 @@
 Modeling guidelines
 ===================
 
-Model names
------------
+Model definition
+----------------
 
-The validation logic passes each need object to Pydantic. The need type is used to look up the correct model in
-the configuration list :ref:`modeling_models`. sphinx-modeling uses an implicit logic to derive the modeling class
-from the need type. Some examples for how need types are converted to class names::
-    
-    impl -> Impl
-    Swspec -> Swspec
-    SwSpec -> SwSpec
-    sw-spec -> SwSpec
-    sw_spec -> SwSpec
-    sw_Spec -> SwSpec
-    sw1_Spec -> Sw1Spec
-    1sw_spec -> SwSpec
-    IPAddress -> IpAddress
-    SPEC -> Spec
+.. admonition:: Handling in versions <= 0.1.1
+    :collapsible:
 
-The logic splits the need type on non-identifier symbols and underscores and removes leading digits.
-Then it runs `.title() <https://docs.python.org/3/library/stdtypes.html#str.title>`_ on all items and joins them
-together.
+    The validation logic passes each need object to Pydantic. The need type is used to look up the correct model in
+    the configuration list :ref:`modeling_models`. sphinx-modeling uses an implicit logic to derive the modeling class
+    from the need type. Some examples for how need types are converted to class names::
+        
+        impl -> Impl
+        Swspec -> Swspec
+        SwSpec -> SwSpec
+        sw-spec -> SwSpec
+        sw_spec -> SwSpec
+        sw_Spec -> SwSpec
+        sw1_Spec -> Sw1Spec
+        1sw_spec -> SwSpec
+        IPAddress -> IpAddress
+        SPEC -> Spec
 
-.. note::
-    Please make sure the mapping of model names to need types is unambiguous.
-    Each model name can only map to exactly one need type.
+    The logic splits the need type on non-identifier symbols and underscores and removes leading digits.
+    Then it runs `.title() <https://docs.python.org/3/library/stdtypes.html#str.title>`_ on all items and joins them
+    together.
+
+    .. note::
+        Please make sure the mapping of model names to need types is unambiguous.
+        Each model name can only map to exactly one need type.
+
+Each Sphinx-Needs object has a field ``type`` that stores the used RST directive.
+Each need ``type`` has exactly one Pydantic model mapped, to configure it use :ref:`modeling_models`.
 
 Base class
 ----------
@@ -157,6 +163,7 @@ Above settings are particularly helpful if the setting
         id: str
         type: Literal["story"]
 
+.. _need_link_resolution:
 
 Need link resolution
 --------------------
@@ -290,6 +297,8 @@ Union with multiplicity
         links: Union[conlist(Story, min_items=1, max_items=1), conlist(Spec, min_items=2)]
 
 In above example each ``Impl`` must either link to exactly 1 ``Story`` or to 2 or more ``Spec`` need items.
+
+.. _linked_need_validation:
 
 Linked need validation
 ----------------------

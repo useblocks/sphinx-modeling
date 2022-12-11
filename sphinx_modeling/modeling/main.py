@@ -128,10 +128,7 @@ def check_model(env: BuildEnvironment, msg_path: str) -> None:
     sphinx_needs_link_types = [link["option"] for link in env.config.needs_extra_links]
     sphinx_needs_link_types_back = [f"{link}_back" for link in sphinx_needs_link_types]
 
-    # build a dictionay to look up user model names
-    model_name_2_model = {model.__name__: model for model in pydantic_models}
-
-    for model in pydantic_models:
+    for model in pydantic_models.values():
         # invert the order of root validators to have
         # context variables available in user defined root validators
         model.__post_root_validators__.reverse()
@@ -143,9 +140,8 @@ def check_model(env: BuildEnvironment, msg_path: str) -> None:
     for need in needs_copy.values():
         try:
             # expected model name is the need type with first letter capitalized (this is how Python class are named)
-            expected_pydantic_model_name = str_to_cls_name(need["type"])
-            if expected_pydantic_model_name in model_name_2_model:
-                model = model_name_2_model[expected_pydantic_model_name]
+            if need["type"] in pydantic_models:
+                model = pydantic_models[need["type"]]
                 # get all fields that exist as per the model
                 model_fields = [name for name, field in model.__fields__.items() if isinstance(field, ModelField)]
                 need_relevant_fields = _remove_unrequested_fields(

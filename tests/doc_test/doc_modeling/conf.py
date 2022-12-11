@@ -115,13 +115,13 @@ class Test(BaseModelNeeds, extra=Extra.forbid):
     _empty_impact = validator("impact", allow_reuse=True, pre=True)(empty_means_none)
 
 
-modeling_models = [
-    Story,
-    Spec,
-    SwSpec,
-    Impl,
-    Test,
-]
+modeling_models = {
+    "story": Story,
+    "spec": Spec,
+    "sw-spec": SwSpec,
+    "impl": Impl,
+    "test": Test,
+}
 modeling_remove_fields = MODELING_REMOVE_FIELDS + [
     "content",
     "full_title",

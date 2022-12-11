@@ -26,7 +26,7 @@ def setup(app: Sphinx) -> Dict[str, Any]:
     log.info("Setting up sphinx-modeling extension")
 
     # configurations
-    app.add_config_value("modeling_models", [], "html", types=[str])
+    app.add_config_value("modeling_models", {}, "html", types=[Dict[str, Any]])
     app.add_config_value(
         "modeling_remove_fields",
         MODELING_REMOVE_FIELDS,
