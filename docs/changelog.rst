@@ -29,6 +29,9 @@ Changed
 - Add new ignore fields ``doctype``, ``arch``
   (`Issue #23 <https://github.com/useblocks/sphinx-modeling/issues/23>`_,
   `PR #25 <https://github.com/useblocks/sphinx-modeling/pull/25>`_)
+- Dict type for ``modeling_models``
+  (`Issue #16 <https://github.com/useblocks/sphinx-modeling/issues/16>`_,
+  `PR #26 <https://github.com/useblocks/sphinx-modeling/pull/26>`_)
 
 Fixed
 ~~~~~

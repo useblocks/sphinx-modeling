@@ -24,14 +24,14 @@ All configuration options starts with the prefix ``modeling_`` for Sphinx-Modeli
 modeling_models
 ~~~~~~~~~~~~~~~
 
-This option defines the list of user provided pydantic models.
+This option defines a mapping of need types to Pydantic models.
 Each pydantic model class must inherit from ``BaseModelNeeds`` which can be imported as follows
 
 .. code-block:: python
 
    from sphinx_modeling.modeling.main import BaseModelNeeds
 
-Default: ``[]``
+Default: ``{}``
 
 .. code-block:: python
 
@@ -45,7 +45,10 @@ Default: ``[]``
       type: Literal["spec"]
       links: pydantic.conlist(Story, min_items=1, max_items=1)
 
-   modeling_models = [Story, Spec]
+   modeling_models = {
+      'story': Story,
+      'spec': Spec,
+   }
 
 The repository contains a `full example <https://github.com/useblocks/sphinx-modeling/blob/main/tests/doc_test/doc_modeling/conf.py>`_. More examples and details can be found in the :ref:`modeling_guidelines`.
 
@@ -126,5 +129,5 @@ target need dictionary.
    dictionary might lead to circular references which is perfectly fine in Python but not for Pydantic.
    This happens if e.g. a ``test`` references a ``spec`` which references a ``story`` which then links
    to the same ``test`` again. To avoid this create dedicated models with a reduced field set for linked
-   need validation. See the :ref:`modeling_guidelines` for more information.
+   need validation. See :ref:`linked_need_validation` for more information.
 
