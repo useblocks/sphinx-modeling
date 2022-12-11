@@ -9,7 +9,6 @@ from contextlib import suppress
 import copy
 import os
 import pickle
-import re
 from typing import Any, Dict, List, Set
 
 from pydantic import BaseModel, ValidationError, root_validator
@@ -46,45 +45,6 @@ class BaseModelNeeds(BaseModel):
         del values["all_needs"]
         del values["env"]
         return values
-
-
-def camel_case_split(identifier: str) -> List[str]:
-    """
-    Split a CamelCase string into separate words.
-
-    Credits to https://stackoverflow.com/a/37697078/2285820.
-    """
-    words = re.sub("([A-Z][a-z]+)", r" \1", re.sub("([A-Z]+)", r" \1", identifier)).split()
-    return words
-
-
-def str_to_cls_name(input_text: str) -> str:
-    """
-    Convert any string into a valid, PEP8 compliant Python class name.
-
-    Identifiers already in CamelCase style are preserved. Examples:
-    - impl > Impl
-    - Swspec > Swspec
-    - SwSpec > SwSpec
-    - sw-spec > SwSpec
-    - sw_spec > SwSpec
-    - sw_Spec > SwSpec
-    - sw1_Spec > Sw1Spec
-    - 1sw_spec > SwSpec
-    - IPAddress > IpAddress
-    - SPEC > Spec
-    """
-    replace_special = re.sub(r"\W|^\d+|_", " ", input_text)
-    camel_case_split_words = camel_case_split(replace_special)
-    title_words = [word.title() for word in camel_case_split_words]
-    joined = "".join(title_words)
-    if not joined.isidentifier():
-        raise ValueError(
-            f"The need type '{input_text}' is converted to the modeling class name '{joined}' which is not a valid"
-            " identifier."
-        )
-    log.debug(f"Converted need type '{input_text}' to model class name '{joined}'")
-    return joined
 
 
 def check_model(env: BuildEnvironment, msg_path: str) -> None:
@@ -188,6 +148,7 @@ def check_model(env: BuildEnvironment, msg_path: str) -> None:
     if all_messages:
         for msg in all_messages:
             log.warning(msg)
+            log.info(msg)
         dir_name = os.path.dirname(os.path.abspath(msg_path))
         if not os.path.exists(dir_name):
             os.makedirs(dir_name)
