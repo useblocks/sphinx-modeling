@@ -1,3 +1,10 @@
+{%- macro issue(nr) -%}
+`Issue #{{ nr }} <https://github.com/useblocks/sphinx-modeling/issues/{{ nr }}>`_
+{%- endmacro -%}
+{%- macro pr(nr) -%}
+`PR #{{ nr }} <https://github.com/useblocks/sphinx-modeling/pull/{{ nr }}>`_
+{%- endmacro -%}
+
 .. _changelog:
 
 Changelog
@@ -19,25 +26,19 @@ Please see all `Unreleased Changes`_ for more information.
 Added
 ~~~~~
 
-- Circular link loops
-  (`Issue #22 <https://github.com/useblocks/sphinx-modeling/issues/22>`_,
-  `PR #25 <https://github.com/useblocks/sphinx-modeling/pull/25>`_)
+- Circular link loops ({{ issue(22) }}, {{ pr(25) }})
+- Early output of warnings ({{ issue(21) }}, {{ pr(27) }})
 
 Changed
 ~~~~~~~
 
-- Add new ignore fields ``doctype``, ``arch``
-  (`Issue #23 <https://github.com/useblocks/sphinx-modeling/issues/23>`_,
-  `PR #25 <https://github.com/useblocks/sphinx-modeling/pull/25>`_)
-- Dict type for ``modeling_models``
-  (`Issue #16 <https://github.com/useblocks/sphinx-modeling/issues/16>`_,
-  `PR #26 <https://github.com/useblocks/sphinx-modeling/pull/26>`_)
+- Add new ignore fields ``doctype``, ``arch`` ({{ issue(23) }}, {{ pr(25) }})
+- Dict type for ``modeling_models`` ({{ issue(16) }}, {{ pr(26) }})
 
 Fixed
 ~~~~~
 
-- handle need types with non-identifier characters
-  (`Issue #16 <https://github.com/useblocks/sphinx-modeling/issues/16>`_, `PR #19 <https://github.com/useblocks/sphinx-modeling/pull/19>`_)
+- handle need types with non-identifier characters ({{ issue(16) }}, {{ pr(19) }})
 
 0.1.1 - 2022-09-28
 ------------------
@@ -45,7 +46,7 @@ Fixed
 Fixed
 ~~~~~
 
-- correct handling of modeling_remove_backlinks (`PR #10 <https://github.com/useblocks/sphinx-modeling/pull/10>`_)
+- correct handling of modeling_remove_backlinks ({{ pr(10) }})
 
 0.1.0 - 2022-09-27
 ------------------
