@@ -15,7 +15,7 @@ from sphinx_modeling.modeling.defaults import MODELING_REMOVE_BACKLINKS, MODELIN
 from sphinx_modeling.modeling.main import check_model
 
 
-VERSION = "0.1.1"
+VERSION = "0.2.0"
 MODELING_MSG_FOLDER = ".modeling"
 MODELING_MSG_FILE = "messages.pickle"
 

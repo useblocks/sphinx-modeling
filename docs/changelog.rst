@@ -10,7 +10,10 @@
 Changelog
 =========
 
-.. _Unreleased Changes: https://github.com/useblocks/sphinx-modeling/compare/0.1.1...HEAD
+.. _Unreleased Changes: https://github.com/useblocks/sphinx-modeling/compare/0.2.0...HEAD
+.. _0.2.0: http://github.com/useblocks/sphinx-modeling/compare/0.1.1...0.2.0
+.. _0.1.1: http://github.com/useblocks/sphinx-modeling/compare/0.1.0...0.1.1
+.. _0.1.0: https://github.com/useblocks/sphinx-modeling/tree/0.1.0
 .. _Keep a Changelog: https://keepachangelog.com/en/1.0.0/
 .. _Semantic Versioning: https://semver.org/spec/v2.0.0.html
 
@@ -22,6 +25,9 @@ Unreleased
 ------------
 
 Please see all `Unreleased Changes`_ for more information.
+
+`0.2.0`_ - 2022-12-12
+---------------------
 
 Added
 ~~~~~
@@ -40,16 +46,16 @@ Fixed
 
 - handle need types with non-identifier characters ({{ issue(16) }}, {{ pr(19) }})
 
-0.1.1 - 2022-09-28
-------------------
+`0.1.1`_ - 2022-09-28
+---------------------
 
 Fixed
 ~~~~~
 
 - correct handling of modeling_remove_backlinks ({{ pr(10) }})
 
-0.1.0 - 2022-09-27
-------------------
+`0.1.0`_ - 2022-09-27
+---------------------
 
 Added
 ~~~~~
