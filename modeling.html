@@ -1,0 +1,1084 @@
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="icon" href="">
+    
+    
+      
+        <title>Modeling guidelines - sphinx-modeling 0.2.0 documentation</title>
+      
+    
+    
+      
+        
+        
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+        <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+        <link rel="stylesheet" type="text/css" href="_static/google_fonts.css" />
+        <link rel="stylesheet" type="text/css" href="_static/stylesheets/sphinx_immaterial_theme.e10f1df50225cf229.min.css" />
+        <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="light-blue">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#model-definition" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="index.html" title="sphinx-modeling 0.2.0 documentation" class="md-header__button md-logo" aria-label="sphinx-modeling 0.2.0 documentation" data-md-component="logo">
+      <img src="_static/sphinx-modeling-logo-white.png" alt="logo">
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            sphinx-modeling 0.2.0 documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Modeling guidelines
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="light-blue"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3 3.19.09m3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95 2.06.05m-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31Z"/></svg>
+            </label>
+          
+        
+          
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="yellow"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5c-.84 0-1.65.15-2.39.42L12 2M3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29L3.34 7m.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14L3.36 17M20.65 7l-1.77 3.79a7.023 7.023 0 0 0-2.38-4.15l4.15.36m-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29L20.64 17M12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44L12 22Z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7 0-.24-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91 1.61 0 2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08Z"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/useblocks/sphinx-modeling" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Sphinx-Modeling
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="index.html" title="sphinx-modeling 0.2.0 documentation" class="md-nav__button md-logo" aria-label="sphinx-modeling 0.2.0 documentation" data-md-component="logo">
+      <img src="_static/sphinx-modeling-logo-white.png" alt="logo">
+    </a>
+    sphinx-modeling 0.2.0 documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/useblocks/sphinx-modeling" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Sphinx-Modeling
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="installation.html" class="md-nav__link">
+        <span class="md-ellipsis">Installation</span>
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="configuration.html" class="md-nav__link">
+        <span class="md-ellipsis">Configuration</span>
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          <span class="md-ellipsis">Modeling guidelines</span>
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="#" class="md-nav__link md-nav__link--active">
+        <span class="md-ellipsis">Modeling guidelines</span>
+      </a>
+      
+        
+
+  
+
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      <span class="md-ellipsis">Modeling guidelines</span>
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#model-definition" class="md-nav__link">
+    <span class="md-ellipsis">Model definition</span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#base-class" class="md-nav__link">
+    <span class="md-ellipsis">Base class</span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#need-structure" class="md-nav__link">
+    <span class="md-ellipsis">Need structure</span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#handled-fields" class="md-nav__link">
+    <span class="md-ellipsis">Handled fields</span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#need-link-resolution" class="md-nav__link">
+    <span title="need_link_resolution (reference label)" class="md-ellipsis">Need link resolution</span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#link-validation-examples" class="md-nav__link">
+    <span class="md-ellipsis">Link validation examples</span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Link validation examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#multiplicity-1-1" class="md-nav__link">
+    <span class="md-ellipsis">Multiplicity 1..<wbr>1</span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiplicity-0-1" class="md-nav__link">
+    <span class="md-ellipsis">Multiplicity 0..<wbr>1</span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiplicity-0" class="md-nav__link">
+    <span class="md-ellipsis">Multiplicity 0..<wbr>*</span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiplicity-1" class="md-nav__link">
+    <span class="md-ellipsis">Multiplicity 1..<wbr>*</span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#union" class="md-nav__link">
+    <span class="md-ellipsis">Union</span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#union-with-multiplicity" class="md-nav__link">
+    <span class="md-ellipsis">Union with multiplicity</span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linked-need-validation" class="md-nav__link">
+    <span title="linked_need_validation (reference label)" class="md-ellipsis">Linked need validation</span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-validators" class="md-nav__link">
+    <span class="md-ellipsis">Custom validators</span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context-variables" class="md-nav__link">
+    <span class="md-ellipsis">Context variables</span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="contributing.html" class="md-nav__link">
+        <span class="md-ellipsis">Contributing</span>
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="support.html" class="md-nav__link">
+        <span class="md-ellipsis">Support</span>
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="license.html" class="md-nav__link">
+        <span class="md-ellipsis">License</span>
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="changelog.html" class="md-nav__link">
+        <span class="md-ellipsis">Changelog</span>
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+<nav class="md-nav md-nav--secondary">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      <span class="md-ellipsis">Modeling guidelines</span>
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#model-definition" class="md-nav__link">
+    <span class="md-ellipsis">Model definition</span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#base-class" class="md-nav__link">
+    <span class="md-ellipsis">Base class</span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#need-structure" class="md-nav__link">
+    <span class="md-ellipsis">Need structure</span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#handled-fields" class="md-nav__link">
+    <span class="md-ellipsis">Handled fields</span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#need-link-resolution" class="md-nav__link">
+    <span title="need_link_resolution (reference label)" class="md-ellipsis">Need link resolution</span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#link-validation-examples" class="md-nav__link">
+    <span class="md-ellipsis">Link validation examples</span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Link validation examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#multiplicity-1-1" class="md-nav__link">
+    <span class="md-ellipsis">Multiplicity 1..<wbr>1</span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiplicity-0-1" class="md-nav__link">
+    <span class="md-ellipsis">Multiplicity 0..<wbr>1</span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiplicity-0" class="md-nav__link">
+    <span class="md-ellipsis">Multiplicity 0..<wbr>*</span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiplicity-1" class="md-nav__link">
+    <span class="md-ellipsis">Multiplicity 1..<wbr>*</span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#union" class="md-nav__link">
+    <span class="md-ellipsis">Union</span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#union-with-multiplicity" class="md-nav__link">
+    <span class="md-ellipsis">Union with multiplicity</span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linked-need-validation" class="md-nav__link">
+    <span title="linked_need_validation (reference label)" class="md-ellipsis">Linked need validation</span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-validators" class="md-nav__link">
+    <span class="md-ellipsis">Custom validators</span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context-variables" class="md-nav__link">
+    <span class="md-ellipsis">Context variables</span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset" role="main">
+                  
+
+
+  <a href="https://github.com/useblocks/sphinx-modeling/blob/master/docs/modeling.rst" title="Edit this page" class="md-content__button md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
+  </a>
+
+<h1 id="modeling-guidelines"><span id="id1"></span>Modeling guidelines<a class="headerlink" href="#modeling-guidelines" title="Permalink to this heading">¶</a></h1>
+<h2 id="model-definition">Model definition<a class="headerlink" href="#model-definition" title="Permalink to this heading">¶</a></h2>
+<details class="admonition">
+<summary class="admonition-title">Handling in versions &lt;= 0.1.1</summary><p>The validation logic passes each need object to Pydantic. The need type is used to look up the correct model in
+the configuration list <a class="reference internal" href="configuration.html#modeling-models"><span class="std std-ref">modeling_models</span></a>. sphinx-modeling uses an implicit logic to derive the modeling class
+from the need type. Some examples for how need types are converted to class names:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><code><span class="n">impl</span> <span class="o">-&gt;</span> <span class="n">Impl</span>
+<span class="n">Swspec</span> <span class="o">-&gt;</span> <span class="n">Swspec</span>
+<span class="n">SwSpec</span> <span class="o">-&gt;</span> <span class="n">SwSpec</span>
+<span class="n">sw</span><span class="o">-</span><span class="n">spec</span> <span class="o">-&gt;</span> <span class="n">SwSpec</span>
+<span class="n">sw_spec</span> <span class="o">-&gt;</span> <span class="n">SwSpec</span>
+<span class="n">sw_Spec</span> <span class="o">-&gt;</span> <span class="n">SwSpec</span>
+<span class="n">sw1_Spec</span> <span class="o">-&gt;</span> <span class="n">Sw1Spec</span>
+<span class="mi">1</span><span class="n">sw_spec</span> <span class="o">-&gt;</span> <span class="n">SwSpec</span>
+<span class="n">IPAddress</span> <span class="o">-&gt;</span> <span class="n">IpAddress</span>
+<span class="n">SPEC</span> <span class="o">-&gt;</span> <span class="n">Spec</span>
+</code></pre></div>
+</div>
+<p>The logic splits the need type on non-identifier symbols and underscores and removes leading digits.
+Then it runs <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str.title">.title()</a> on all items and joins them
+together.</p>
+<div class="note admonition">
+<p class="admonition-title">Note</p>
+<p>Please make sure the mapping of model names to need types is unambiguous.
+Each model name can only map to exactly one need type.</p>
+</div>
+</details>
+<p>Each Sphinx-Needs object has a field <code class="docutils literal notranslate"><span class="pre">type</span></code> that stores the used RST directive.
+Each need <code class="docutils literal notranslate"><span class="pre">type</span></code> has exactly one Pydantic model mapped, to configure it use <a class="reference internal" href="configuration.html#modeling-models"><span class="std std-ref">modeling_models</span></a>.</p>
+<h2 id="base-class">Base class<a class="headerlink" href="#base-class" title="Permalink to this heading">¶</a></h2>
+<p>Each user provided Pydantic model can inherit from <code class="docutils literal notranslate"><span class="pre">BaseModelNeeds</span></code>.
+When doing so custom validators get access to <a class="reference internal" href="#context-vars"><span class="std std-ref">Context variables</span></a>.</p>
+<h2 id="need-structure">Need structure<a class="headerlink" href="#need-structure" title="Permalink to this heading">¶</a></h2>
+<p>Each need is represented as a dictionary in Sphinx-Needs that holds</p>
+<ul class="simple">
+<li><p>extra option fields</p></li>
+<li><p>link fields</p></li>
+<li><p>back link fields</p></li>
+<li><p>internal fields</p></li>
+</ul>
+<details class="admonition">
+<summary class="admonition-title">Need dictionary example</summary><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span class="n">need</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;docname&quot;</span><span class="p">:</span> <span class="s2">&quot;index&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;doctype&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;lineno&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;target_node&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;target: &gt;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;external_url&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="s2">&quot;content_node&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;Need: &lt;paragraph...&gt;&gt;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;type_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Test Case&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;type_prefix&quot;</span><span class="p">:</span> <span class="s2">&quot;TC_&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;type_color&quot;</span><span class="p">:</span> <span class="s2">&quot;#DCB239&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;type_style&quot;</span><span class="p">:</span> <span class="s2">&quot;node&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="s2">&quot;tags&quot;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="s2">&quot;constraints&quot;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="s2">&quot;constraints_passed&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="s2">&quot;constraints_results&quot;</span><span class="p">:</span> <span class="p">{},</span>
+    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;TC_001&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Test test1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;full_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Test test1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Test case content&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;collapse&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="s2">&quot;diagram&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="s2">&quot;style&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="s2">&quot;layout&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;template&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="s2">&quot;pre_template&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="s2">&quot;post_template&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="s2">&quot;hide&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s2">&quot;delete&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="s2">&quot;jinja_content&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="s2">&quot;parts&quot;</span><span class="p">:</span> <span class="p">{},</span>
+    <span class="s2">&quot;is_part&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s2">&quot;is_need&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">&quot;parent_need&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;docname&quot;</span><span class="p">:</span> <span class="s2">&quot;index&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;doctype&quot;</span><span class="p">:</span> <span class="s2">&quot;.rst&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;lineno&quot;</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span>
+        <span class="s2">&quot;target_node&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;target: &gt;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;more&quot;</span><span class="p">:</span> <span class="s2">&quot;fields&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;is_external&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s2">&quot;external_css&quot;</span><span class="p">:</span> <span class="s2">&quot;external_link&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;is_modified&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s2">&quot;modifications&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;active&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;impact&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;importance&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;owner&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;priority&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;specific&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;max_amount&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;max_content_lines&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;id_prefix&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;created_at&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;updated_at&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;closed_at&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;service&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;avatar&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;prefix&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;url_postfix&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;hidden&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;duration&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;completion&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;has_dead_links&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;has_forbidden_dead_links&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;parent_needs&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;docname&quot;</span><span class="p">:</span> <span class="s2">&quot;index&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;doctype&quot;</span><span class="p">:</span> <span class="s2">&quot;.rst&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;lineno&quot;</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span>
+            <span class="s2">&quot;target_node&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;target: &gt;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;more&quot;</span><span class="p">:</span> <span class="s2">&quot;fields&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;parent_needs_back&quot;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="s2">&quot;links&quot;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="s2">&quot;links_back&quot;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="s2">&quot;sections&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TEST DOCUMENT MODELING&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;section_name&quot;</span><span class="p">:</span> <span class="s2">&quot;TEST DOCUMENT MODELING&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;signature&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+</details>
+<p>User provided Pydantic models can basically validate all available fields.</p>
+<h2 id="handled-fields">Handled fields<a class="headerlink" href="#handled-fields" title="Permalink to this heading">¶</a></h2>
+<p>Internal fields are commonly not of interest for validation and can be removed before passing the dictionary to
+Pydantic. The parameter <a class="reference internal" href="configuration.html#modeling-remove-fields"><span class="std std-ref">modeling_remove_fields</span></a> can be used to configure what gets removed.</p>
+<p>Fields that hold back links like <code class="docutils literal notranslate"><span class="pre">links_back</span></code> are automatically created by Sphinx-Needs.
+If validation is not needed, they can be removed by activating <a class="reference internal" href="configuration.html#modeling-remove-backlinks"><span class="std std-ref">modeling_remove_backlinks</span></a>.</p>
+<p>Above settings are particularly helpful if the setting
+<a class="reference external" href="https://docs.pydantic.dev/usage/model_config/">Extra.forbid</a> is used:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">Story</span><span class="p">(</span><span class="n">BaseModelNeeds</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="n">Extra</span><span class="o">.</span><span class="n">forbid</span><span class="p">):</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;story&quot;</span><span class="p">]</span>
+</code></pre></div>
+</div>
+<h2 id="need-link-resolution"><span id="id2"></span>Need link resolution<a class="headerlink" href="#need-link-resolution" title="Permalink to this heading">¶</a></h2>
+<details class="admonition">
+<summary class="admonition-title">Handling in versions &lt;= 0.1.1</summary><p>Up to version <code class="docutils literal notranslate"><span class="pre">0.1.1</span></code> Sphinx-Modeling handled <code class="docutils literal notranslate"><span class="pre">ModelFields</span></code> that validated linked need objects using
+a <code class="docutils literal notranslate"><span class="pre">pre</span></code> root validator in <code class="docutils literal notranslate"><span class="pre">BaseModelNeeds</span></code>. It resolved target needs and instantiated the model directly.
+This had 3 major downsides:</p>
+<ul class="simple">
+<li><p>circular need link loops resulted in an error as Pydantic cannot handle those (also not planned for Pydantic v2)</p></li>
+<li><p>hidden and complicated logic</p></li>
+</ul>
+</details>
+<p>Sphinx-Needs represents link field values as list of need ID strings. The only exception from this is the field
+<code class="docutils literal notranslate"><span class="pre">parent_need</span></code> which holds the nested need parent ID directly (without a list).</p>
+<p>When activating the flag <a class="reference internal" href="configuration.html#modeling-resolve-links"><span class="std std-ref">modeling_resolve_links</span></a> all need IDs get replaced with the target need’s dicionary.
+That makes it possible to write Pydantic models that validate against linked need fields.</p>
+<div class="warning admonition">
+<p class="admonition-title">Warning</p>
+<p>Keep in mind that Pydantic does not support circular references. The linked needs can form circular
+link reference chains, which is not a problem in Python dictionaries. Pydantic models
+that validate against nested dictionaries can however lead to max recursion depth errors.</p>
+</div>
+<p>Here are some examples how a link validation can look like.</p>
+<h2 id="link-validation-examples">Link validation examples<a class="headerlink" href="#link-validation-examples" title="Permalink to this heading">¶</a></h2>
+<h3 id="multiplicity-1-1">Multiplicity 1..1<a class="headerlink" href="#multiplicity-1-1" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">Story</span><span class="p">(</span><span class="n">BaseModelNeeds</span><span class="p">):</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;story&quot;</span><span class="p">]</span>
+
+<span class="k">class</span> <span class="nc">Spec</span><span class="p">(</span><span class="n">BaseModelNeeds</span><span class="p">):</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;spec&quot;</span><span class="p">]</span>
+    <span class="n">links</span><span class="p">:</span> <span class="n">conlist</span><span class="p">(</span><span class="n">Story</span><span class="p">,</span> <span class="n">min_items</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_items</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+</div>
+<p>In above example each <code class="docutils literal notranslate"><span class="pre">Spec</span></code> must link to exactly 1 <code class="docutils literal notranslate"><span class="pre">Story</span></code>.</p>
+<h3 id="multiplicity-0-1">Multiplicity 0..1<a class="headerlink" href="#multiplicity-0-1" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">Story</span><span class="p">(</span><span class="n">BaseModelNeeds</span><span class="p">):</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;story&quot;</span><span class="p">]</span>
+
+<span class="k">class</span> <span class="nc">Spec</span><span class="p">(</span><span class="n">BaseModelNeeds</span><span class="p">):</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;spec&quot;</span><span class="p">]</span>
+    <span class="n">links</span><span class="p">:</span> <span class="n">conlist</span><span class="p">(</span><span class="n">Story</span><span class="p">,</span> <span class="n">min_items</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_items</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+</div>
+<p>In above example each <code class="docutils literal notranslate"><span class="pre">Spec</span></code> can optionally link to exactly 1 <code class="docutils literal notranslate"><span class="pre">Story</span></code>.</p>
+<h3 id="multiplicity-0">Multiplicity 0..*<a class="headerlink" href="#multiplicity-0" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">Story</span><span class="p">(</span><span class="n">BaseModelNeeds</span><span class="p">):</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;story&quot;</span><span class="p">]</span>
+
+<span class="k">class</span> <span class="nc">Spec</span><span class="p">(</span><span class="n">BaseModelNeeds</span><span class="p">):</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;spec&quot;</span><span class="p">]</span>
+    <span class="n">links</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Story</span><span class="p">]</span>
+</code></pre></div>
+</div>
+<p>In above example each <code class="docutils literal notranslate"><span class="pre">Spec</span></code> can link to 0 or more need type <code class="docutils literal notranslate"><span class="pre">Story</span></code>.</p>
+<h3 id="multiplicity-1">Multiplicity 1..*<a class="headerlink" href="#multiplicity-1" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">Story</span><span class="p">(</span><span class="n">BaseModelNeeds</span><span class="p">):</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;story&quot;</span><span class="p">]</span>
+
+<span class="k">class</span> <span class="nc">Spec</span><span class="p">(</span><span class="n">BaseModelNeeds</span><span class="p">):</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;spec&quot;</span><span class="p">]</span>
+    <span class="n">links</span><span class="p">:</span> <span class="n">conlist</span><span class="p">(</span><span class="n">Story</span><span class="p">,</span> <span class="n">min_items</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+</div>
+<p>In above example each <code class="docutils literal notranslate"><span class="pre">Spec</span></code> can link to 1 or more <code class="docutils literal notranslate"><span class="pre">Story</span></code> need types.</p>
+<h3 id="union">Union<a class="headerlink" href="#union" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">Story</span><span class="p">(</span><span class="n">BaseModelNeeds</span><span class="p">):</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;story&quot;</span><span class="p">]</span>
+
+<span class="k">class</span> <span class="nc">Spec</span><span class="p">(</span><span class="n">BaseModelNeeds</span><span class="p">):</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;spec&quot;</span><span class="p">]</span>
+
+<span class="k">class</span> <span class="nc">Impl</span><span class="p">(</span><span class="n">BaseModelNeeds</span><span class="p">):</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;impl&quot;</span><span class="p">]</span>
+    <span class="n">links</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Story</span><span class="p">,</span> <span class="n">Spec</span><span class="p">]]</span>
+</code></pre></div>
+</div>
+<p>In above example each <code class="docutils literal notranslate"><span class="pre">Impl</span></code> must link to 0 or more need types <code class="docutils literal notranslate"><span class="pre">Story</span></code> or <code class="docutils literal notranslate"><span class="pre">Spec</span></code>.</p>
+<h3 id="union-with-multiplicity">Union with multiplicity<a class="headerlink" href="#union-with-multiplicity" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">Story</span><span class="p">(</span><span class="n">BaseModelNeeds</span><span class="p">):</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;story&quot;</span><span class="p">]</span>
+
+<span class="k">class</span> <span class="nc">Spec</span><span class="p">(</span><span class="n">BaseModelNeeds</span><span class="p">):</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;spec&quot;</span><span class="p">]</span>
+
+<span class="k">class</span> <span class="nc">Impl</span><span class="p">(</span><span class="n">BaseModelNeeds</span><span class="p">):</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;impl&quot;</span><span class="p">]</span>
+    <span class="n">links</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">conlist</span><span class="p">(</span><span class="n">Story</span><span class="p">,</span> <span class="n">min_items</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_items</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">conlist</span><span class="p">(</span><span class="n">Spec</span><span class="p">,</span> <span class="n">min_items</span><span class="o">=</span><span class="mi">2</span><span class="p">)]</span>
+</code></pre></div>
+</div>
+<p>In above example each <code class="docutils literal notranslate"><span class="pre">Impl</span></code> must either link to exactly 1 <code class="docutils literal notranslate"><span class="pre">Story</span></code> or to 2 or more <code class="docutils literal notranslate"><span class="pre">Spec</span></code> need items.</p>
+<h2 id="linked-need-validation"><span id="id3"></span>Linked need validation<a class="headerlink" href="#linked-need-validation" title="Permalink to this heading">¶</a></h2>
+<p>In above examples, the linked need types are directly used as Pydantic nested models.
+That means a linked need is only valid if all linked need fields can be validated.
+It also implies validation errors gets duplicated because the linked need is validated multiple times.</p>
+<p>To avoid the validation error duplication and also to avoid circular link loops, additional Pydantic models can be
+defined just for the links. Imaging the following cicular link situation:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">Story</span><span class="p">(</span><span class="n">BaseModelNeeds</span><span class="p">):</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;story&quot;</span><span class="p">]</span>
+    <span class="n">impls</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Impl</span><span class="p">]</span>
+
+<span class="k">class</span> <span class="nc">Spec</span><span class="p">(</span><span class="n">BaseModelNeeds</span><span class="p">):</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;spec&quot;</span><span class="p">]</span>
+    <span class="n">story</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Story</span><span class="p">]</span>
+
+<span class="k">class</span> <span class="nc">Impl</span><span class="p">(</span><span class="n">BaseModelNeeds</span><span class="p">):</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;impl&quot;</span><span class="p">]</span>
+    <span class="n">links</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Spec</span><span class="p">]</span>
+</code></pre></div>
+</div>
+<p>It can be resolved like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">LinkedStory</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;story&quot;</span><span class="p">]</span>
+
+<span class="k">class</span> <span class="nc">LinkedSpec</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;spec&quot;</span><span class="p">]</span>
+
+<span class="k">class</span> <span class="nc">LinkedImpl</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;impl&quot;</span><span class="p">]</span>
+
+<span class="k">class</span> <span class="nc">Story</span><span class="p">(</span><span class="n">BaseModelNeeds</span><span class="p">):</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;story&quot;</span><span class="p">]</span>
+    <span class="n">impls</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">LinkedImpl</span><span class="p">]</span>
+
+<span class="k">class</span> <span class="nc">Spec</span><span class="p">(</span><span class="n">BaseModelNeeds</span><span class="p">):</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;spec&quot;</span><span class="p">]</span>
+    <span class="n">story</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">LinkedStory</span><span class="p">]</span>
+
+<span class="k">class</span> <span class="nc">Impl</span><span class="p">(</span><span class="n">BaseModelNeeds</span><span class="p">):</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;impl&quot;</span><span class="p">]</span>
+    <span class="n">links</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">LinkedSpec</span><span class="p">]</span>
+</code></pre></div>
+</div>
+<p>The solution will just check whether the linked type is correct.
+The example can also be used to validate more fields of linked needs by adding more fields to the <code class="docutils literal notranslate"><span class="pre">Linked*</span></code> classes.</p>
+<h2 id="custom-validators">Custom validators<a class="headerlink" href="#custom-validators" title="Permalink to this heading">¶</a></h2>
+<p>This model checks whether linked stories have the right value in their <code class="docutils literal notranslate"><span class="pre">active</span></code> field:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">Story</span><span class="p">(</span><span class="n">BaseModelNeeds</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="n">Extra</span><span class="o">.</span><span class="n">forbid</span><span class="p">):</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;story&quot;</span><span class="p">]</span>
+    <span class="n">active</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;True&quot;</span><span class="p">,</span> <span class="s2">&quot;False&quot;</span><span class="p">]</span>
+
+<span class="k">class</span> <span class="nc">Spec</span><span class="p">(</span><span class="n">BaseModelNeeds</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="n">Extra</span><span class="o">.</span><span class="n">forbid</span><span class="p">):</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;spec&quot;</span><span class="p">]</span>
+    <span class="n">links</span><span class="p">:</span> <span class="n">conlist</span><span class="p">(</span><span class="n">Story</span><span class="p">,</span> <span class="n">min_items</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_items</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;links&quot;</span><span class="p">,</span> <span class="n">allow_reuse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">linked_story_active</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">active</span> <span class="o">==</span> <span class="s2">&quot;False&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Can only link active stories&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">value</span>
+</code></pre></div>
+</div>
+<p>This RST</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><code><span class="p">..</span> <span class="ow">story</span><span class="p">::</span> Test story 1
+   <span class="nc">:id:</span> US_001
+   <span class="nc">:active:</span> False
+
+<span class="p">..</span> <span class="ow">spec</span><span class="p">::</span> Test spec1
+   <span class="nc">:id:</span> SP_001
+   <span class="nc">:links:</span> US_001
+</code></pre></div>
+</div>
+<p>leads to the warnings:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span><code>WARNING: Model validation: failed for need SP_001
+WARNING: 1 validation error for Spec
+links
+  Can only link active stories (type=value_error)
+</code></pre></div>
+</div>
+<div class="warning admonition">
+<p class="admonition-title">Warning</p>
+<p>The currently used Pydantic version may raise an exception for custom validators:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span><code>  File &quot;pydantic/class_validators.py&quot;, line 145, in pydantic.class_validators._prepare_validator
+TypeError: unsupported operand type(s) for +: &#39;NoneType&#39; and &#39;str&#39;
+</code></pre></div>
+</div>
+<p>The affected code uses <code class="docutils literal notranslate"><span class="pre">__func__.__module__</span></code>. The <code class="docutils literal notranslate"><span class="pre">__module__</span></code> class variable is not guaranteed to be defined.
+A workaround is to set the <a class="reference external" href="https://pydantic-docs.helpmanual.io/usage/validators/#reuse-validators">allow_reuse</a>
+flag to <code class="docutils literal notranslate"><span class="pre">True</span></code> like shown in the examples below.</p>
+</div>
+<h2 id="context-variables"><span id="context-vars"></span>Context variables<a class="headerlink" href="#context-variables" title="Permalink to this heading">¶</a></h2>
+<p>User defined <a class="reference external" href="https://pydantic-docs.helpmanual.io/usage/validators/#root-validators">root validators</a> have access to the following variables in <code class="docutils literal notranslate"><span class="pre">values</span></code>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">all_needs</span></code> the needs dictionary</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">env</span></code> the Sphinx environment</p></li>
+</ul>
+<p>Pydantic v1 does not yet offer context variables, so
+<a class="reference external" href="https://github.com/pydantic/pydantic/issues/1170#issuecomment-575233689">this workaround</a> is used.
+The feature is however planned for Pydantic v2 (see <a class="reference external" href="https://github.com/pydantic/pydantic/issues/1549">here</a> and
+<a class="reference external" href="https://pydantic-docs.helpmanual.io/blog/pydantic-v2/#validation-context">here</a>).</p>
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+          <a href="#" class="md-top md-icon" data-md-component="top" hidden>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+            Back to top
+          </a>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href="configuration.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: Configuration" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Configuration
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="contributing.html" class="md-footer__link md-footer__link--next" aria-label="Next: Contributing" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Contributing
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  
+  
+  <div class="md-footer-meta md-typeset">
+    
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-footer-copyright__highlight">
+        &#169; Copyright 2022, team useblocks.
+        
+    </div>
+  
+    Created using
+    <a href="https://www.sphinx-doc.org/" target="_blank" rel="noopener">Sphinx</a>
+    5.2.2.
+     and
+    <a href="https://github.com/jbms/sphinx-immaterial/" target="_blank" rel="noopener">Sphinx-Immaterial</a>
+  
+</div>
+      
+    </div>
+    
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": ".", "features": ["navigation.sections", "navigation.top", "search.share"], "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    
+    
+      <script src="_static/javascripts/bundle.444abb77.min.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/design-tabs.js"></script>
+    
+  </body>
+</html>
