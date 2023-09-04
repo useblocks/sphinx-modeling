@@ -19,7 +19,7 @@ jobs:
             sphinx-version: "5.0.2"
             sphinx-needs-version: "1.0.2"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install poetry
         run: pipx install poetry
       - name: Set Up Python ${{ matrix.python-version }}
@@ -43,7 +43,7 @@ jobs:
     name: Lint
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install poetry
         run: pipx install poetry
       - name: Set Up Python
